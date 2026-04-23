@@ -219,6 +219,10 @@ A cinematic mobile strategy experience built for immersive gameplay and next-gen
 <source src="3.mp4">
 </video>
 </div>
+<video class="small-video" autoplay muted loop controls>
+<source src="bhd.mp4">
+</video>
+</div>
 </div>
 
 <div class="card">
@@ -295,9 +299,8 @@ function draw(){
 }
 draw();
 
-// COUNTDOWN (Same as before)
-const target=new Date("2026-04-24T00:00:00").getTime();
-
+// COUNTDOWN (Same as before)// Eski hali: const target=new Date("2026-04-24T00:00:00").getTime();
+const target = new Date("2026-05-15T00:00:00").getTime();
 function updateCountdown(){
     const now=new Date().getTime();
     const diff=target-now;
