@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THEABDOINC | My All Projects</title>
+    <style>
+        :root { 
+            --neon: #00f2ff; 
+            --neon-magenta: #ff0055;
+            --bg: #010103; 
+            --card-bg: rgba(6, 6, 9, 0.65); 
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background: var(--bg); color: #fff; 
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #bg-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none;
+        }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 40px 60px; max-width: 1400px; margin: 0 auto;
+        }
+
+        .brand-wrapper { display: flex; align-items: center; gap: 15px; position: relative; cursor: pointer; text-decoration: none; color: inherit; }
+        
+        .glitch-logo { 
+            font-size: 2.2rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 900;
+            position: relative; color: #fff;
+            animation: glitch-skew 4s infinite linear alternate-reverse;
+        }
+        .glitch-logo span { color: var(--neon); }
+        
+        .glitch-logo::before, .glitch-logo::after {
+            content: 'THEABDOINC';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+        }
+        .glitch-logo::before {
+            left: 2px; text-shadow: -2px 0 var(--neon-magenta);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch-logo::after {
+            left: -2px; text-shadow: -2px 0 var(--neon), 0 2px var(--neon-magenta);
+            clip: rect(85px, 450px, 140px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.3deg); }
+            5% { clip: rect(112px, 9999px, 76px, 0); transform: skew(0.1deg); }
+            10% { clip: rect(85px, 9999px, 5px, 0); transform: skew(-0.2deg); }
+            50% { clip: rect(80px, 9999px, 125px, 0); transform: skew(0.1deg); }
+            100% { clip: rect(67px, 9999px, 43px, 0); transform: skew(0deg); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(76px, 9999px, 116px, 0); transform: skew(-0.1deg); }
+            25% { clip: rect(110px, 9999px, 15px, 0); transform: skew(-0.2deg); }
+            100% { clip: rect(40px, 9999px, 90px, 0); transform: skew(0deg); }
+        }
+        @keyframes glitch-skew { 0% { transform: skew(1deg); } 10% { transform: skew(-1deg); } 100% { transform: skew(0deg); } }
+
+        .final-logo {
+            width: 50px; height: 50px;
+            filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.3));
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .brand-wrapper:hover .final-logo { transform: rotate(20deg) scale(1.15); filter: drop-shadow(0 0 15px var(--neon)); }
+
+        .dev-tag { color: #555; font-family: monospace; font-size: 0.9rem; letter-spacing: 2px; }
+
+        .hero-section { 
+            text-align: center; margin: 40px 0 60px 0; position: relative; display: flex; flex-direction: column; align-items: center;
+        }
+        .hero-section h2 { 
+            font-size: 3.5rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 900; color: #fff;
+            text-shadow: 0 0 25px rgba(0, 242, 255, 0.15);
+        }
+        .hero-section p { 
+            color: var(--neon); font-size: 1rem; font-family: monospace; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; opacity: 0.8;
+        }
+
+        .showcase-status {
+            display: flex; gap: 25px; margin-top: 15px; font-family: monospace; font-size: 0.75rem; color: #444;
+            border-top: 1px solid rgba(255, 255, 255, 0.03); border-bottom: 1px solid rgba(255, 255, 255, 0.03); padding: 6px 20px;
+        }
+        .status-node { display: flex; align-items: center; gap: 6px; }
+        .status-node span { color: #666; }
+        .pulse-dot { width: 6px; height: 6px; background: var(--neon); border-radius: 50%; animation: pulse-glow 1.5s infinite ease-in-out; }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; box-shadow: 0 0 8px var(--neon); } }
+
+        /* ÖZELLEŞTİRİLMİŞ GENİŞ GALERİ GRID SİSTEMİ */
+        .gallery-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        
+        .gallery-matrix { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; 
+        }
+        
+        .gallery-node {
+            background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 18px; padding: 12px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); cursor: pointer;
+        }
+        .gallery-node:hover { 
+            border-color: var(--neon); background: rgba(0, 242, 255, 0.02); transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 242, 255, 0.05);
+        }
+        
+        .gallery-video-wrapper { width: 100%; height: 180px; overflow: hidden; border-radius: 12px; background: #000; position: relative; }
+        
+        .gallery-node video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5);
+    transition: all 0.4s ease;
+    pointer-events: auto;
+    cursor: pointer;
+}
+        .gallery-node:hover video { filter: brightness(1); }
+        
+        video:fullscreen { filter: brightness(1) !important; object-fit: contain !important; background: #000 !important; }
+
+        .gallery-info { padding: 12px 4px 4px 4px; display: flex; justify-content: space-between; align-items: center; }
+        .gallery-info span { font-family: monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #888; transition: color 0.3s; }
+        .gallery-node:hover .gallery-info span { color: #fff; }
+        .gallery-status-tag { font-family: monospace; font-size: 0.65rem; color: var(--neon); opacity: 0.6; }
+
+        footer { text-align: center; padding: 100px 0 40px 0; font-family: monospace; }
+        .back-btn {
+            background: rgba(0, 242, 255, 0.05); color: var(--neon); border: 1px solid rgba(0, 242, 255, 0.3);
+            padding: 12px 30px; font-family: monospace; font-size: 0.9rem; font-weight: bold; border-radius: 30px;
+            cursor: pointer; transition: all 0.4s ease; letter-spacing: 2px; text-transform: uppercase; text-decoration: none; display: inline-block;
+        }
+        .back-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); transform: translateY(-2px); }
+        .copyright { color: #444; font-size: 0.85rem; letter-spacing: 1px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <div id="main-content" style="opacity: 1;">
+        <nav>
+            <a href="index.html" class="brand-wrapper" id="nav-brand">
+                <img src="theabdoinclogo.png" class="final-logo" alt="Logo">
+                <h1 class="glitch-logo" data-text="THEABDOINC">THEABDO<span>INC</span></h1>
+            </a>
+            <span class="dev-tag">&lt; DATASET // ALL PROJECTS /&gt;</span>
+        </nav>
+
+        <section class="hero-section">
+            <h2>BLENDER & CYCLES DATASET</h2>
+            <p>// Repository nodes (CLICK CARD TO FULLSCREEN VIDEO)</p>
+            
+            <div class="showcase-status">
+                <div class="status-node"><div class="pulse-dot"></div> ENGINE: <span>CYCLES RENDER</span></div>
+                <div class="status-node">TOTAL_NODES: <span>10 ARCHIVES</span></div>
+            </div>
+        </section>
+
+        <!-- 10'LU PROJE MATRİS ALANI -->
+        <div class="gallery-container">
+            <div class="gallery-matrix">
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="finaş.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>CHIAROSCURO</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="letme derive.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>PHOTOREALISTIC</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="best94.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>REALISTIC ART</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="gkhkh.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>BMW MOTION STUDIO</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="Comp 1_1.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>Mercedes x Bmw</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="Comp 1_3.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>Cinematic Style</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="3.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>Bmw x REALISTIC</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="new.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>Mcqueen x Ford</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="Comp 1_5.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>Project #09</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+                <div class="gallery-node">
+                    <div class="gallery-video-wrapper"><video src="last prohj.mp4" controls playsinline preload="metadata"></video></div>
+                    <div class="gallery-info"><span>High Quality</span><span class="gallery-status-tag">Cycles</span></div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <a href="index.html" class="back-btn" id="back-btn-sound">Return to Core</a>
+            <div class="copyright">© 2026 THEABDOINC. All Rights Reserved.</div>
+        </footer>
+    </div>
+
+    <script>
+        // Ses Efekt Motoru
+        let audioCtx = null;
+        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
+        function playHoverSound() {
+            initAudio(); if (!audioCtx) return;
+            let now = audioCtx.currentTime, osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(1200, now);
+            osc.frequency.exponentialRampToValueAtTime(1600, now + 0.05);
+            gain.gain.setValueAtTime(0.015, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(now + 0.05);
+        }
+
+        // 3D Matrix Canvas Arka Planı
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let nodes = []; const mouse = { x: null, y: null, radius: 200 };
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.6; this.vy = (Math.random() - 0.5) * 0.6;
+                this.radius = Math.random() * 2 + 1;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1; if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = mouse.x - this.x, dy = mouse.y - this.y, dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) {
+                        let force = (mouse.radius - dist) / mouse.radius;
+                        this.x -= (dx / dist) * force * 3; this.y -= (dy / dist) * force * 3;
+                    }
+                }
+            }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0, 242, 255, 0.4)'; ctx.fill(); }
+        }
+        function initNodes() { nodes = []; let count = (canvas.width * canvas.height) / 7500; for(let i = 0; i < count; i++) nodes.push(new Node()); }
+        initNodes();
+        function connectNodes() {
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    let dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y, dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        let opacity = (1 - (dist / 120)) * 0.12;
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${opacity})`; ctx.lineWidth = 1;
+                        ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
+                    }
+                }
+            }
+        }
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); nodes.forEach(node => { node.update(); node.draw(); }); connectNodes(); requestAnimationFrame(animate); }
+        animate();
+
+        // Galeri Dinamik Kontrolleri
+        document.addEventListener("DOMContentLoaded", () => {
+            const galleryNodes = document.querySelectorAll('.gallery-node');
+            
+            galleryNodes.forEach(node => {
+                const vid = node.querySelector('video');
+                if(!vid) return;
+
+                // Üzerine gelince siber ses çıkar ve videoyu oynat
+                node.addEventListener('mouseenter', () => {
+                    playHoverSound();
+                    vid.play().catch(o => {});
+                });
+
+                // Ayrılınca durdur ve sıfırla
+                node.addEventListener('mouseleave', () => {
+                    if(!document.fullscreenElement) {
+                        vid.pause();
+                        vid.currentTime = 0;
+                    }
+                });
+
+                // Kartlardan birine tıklandığında videoyu tam ekran yap
+                vid.addEventListener('dblclick', () => {
+
+    if(document.fullscreenElement){
+        document.exitFullscreen();
+    }else{
+        vid.requestFullscreen();
+    }
+
+});
+});
+
+
+            const backBtn = document.getElementById('back-btn-sound');
+            const navBrand = document.getElementById('nav-brand');
+            [backBtn, navBrand].forEach(el => {
+                if(el) el.addEventListener('click', () => playHoverSound());
+            });
+        });
+    </script>
+</body>
+</html>
