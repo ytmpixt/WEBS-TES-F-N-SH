@@ -2,8 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <!-- Kullanıcının ekranı elitle büyütüp küçültmesi (zoom) tamamen engellendi -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THEABDOINC | Indie Game Dev & 3D Artist</title>
     <style>
         :root { 
@@ -12,17 +11,12 @@
             --bg: #010103; 
             --card-bg: rgba(6, 6, 9, 0.65); 
         }
-        * { 
-            box-sizing: border-box; margin: 0; padding: 0; 
-            /* Mobil cihazlarda çift tıklama ile yakınlaştırmayı engeller */
-            touch-action: manipulation; 
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        body, html { 
+        body { 
             background: var(--bg); color: #fff; 
             font-family: 'Segoe UI', system-ui, sans-serif;
-            width: 100%; height: 100%;
-            overflow: hidden; /* Klasik tarayıcı scrollunu kapatıyoruz */
+            overflow-x: hidden;
             position: relative;
         }
 
@@ -31,7 +25,7 @@
             z-index: -1; pointer-events: none;
         }
 
-        /* LOADER & INTRO ALANI */
+        /* LOADER & GELİŞMİŞ INTRO ALANI */
         #loader {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #000; z-index: 99999; display: flex; 
@@ -44,141 +38,222 @@
         .blink { animation: blinker 0.8s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
 
-        .intro-logo-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-        .intro-logo {
-            width: 150px; height: 150px; opacity: 0; transform: scale(0.7);
-            filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.6)); display: none;
+        /* Giriş Logosu Kümesi */
+        .intro-logo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
         }
 
-        /* GLITCH LOGO YAZISI */
+        .intro-logo {
+            width: 150px; height: 150px; opacity: 0; transform: scale(0.7);
+            filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.6));
+            display: none;
+        }
+
+        /* GELİŞMİŞ GLITCH LOGO YAZISI */
         .intro-glitch-text {
-            font-size: 2.5rem; font-weight: 900; letter-spacing: 6px; text-transform: uppercase;
-            color: #fff; position: relative; display: none; opacity: 0; font-family: 'Segoe UI', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: #fff;
+            position: relative;
+            display: none;
+            opacity: 0;
+            font-family: 'Segoe UI', sans-serif;
             text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
         }
-        .intro-glitch-text.animate-text { display: block; opacity: 1; animation: intro-skew 1s infinite linear alternate-reverse, fadeInText 0.3s ease forwards; }
-        .intro-glitch-text::before, .intro-glitch-text::after { content: 'THEABDOINC'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; }
-        .intro-glitch-text::before { left: 3px; text-shadow: -3px 0 var(--neon-magenta); clip: rect(10px, 9999px, 40px, 0); animation: intro-glitch-1 0.8s infinite linear alternate-reverse; }
-        .intro-glitch-text::after { left: -3px; text-shadow: -3px 0 var(--neon); clip: rect(50px, 9999px, 90px, 0); animation: intro-glitch-2 0.5s infinite linear alternate-reverse; }
+        
+        .intro-glitch-text.animate-text {
+            display: block;
+            opacity: 1;
+            animation: intro-skew 1s infinite linear alternate-reverse, fadeInText 0.3s ease forwards;
+        }
+
+        .intro-glitch-text::before, .intro-glitch-text::after {
+            content: 'THEABDOINC';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+        }
+        .intro-glitch-text::before {
+            left: 3px; text-shadow: -3px 0 var(--neon-magenta);
+            clip: rect(10px, 9999px, 40px, 0);
+            animation: intro-glitch-1 0.8s infinite linear alternate-reverse;
+        }
+        .intro-glitch-text::after {
+            left: -3px; text-shadow: -3px 0 var(--neon);
+            clip: rect(50px, 9999px, 90px, 0);
+            animation: intro-glitch-2 0.5s infinite linear alternate-reverse;
+        }
 
         @keyframes fadeInText { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         @keyframes intro-skew { 0% { transform: skew(3deg); } 20% { transform: skew(-2deg); } 60% { transform: skew(5deg); } 100% { transform: skew(0deg); } }
-        @keyframes intro-glitch-1 { 0% { clip: rect(20px, 9999px, 40px, 0); } 50% { clip: rect(80px, 9999px, 110px, 0); } 100% { clip: rect(5px, 9999px, 25px, 0); } }
-        @keyframes intro-glitch-2 { 0% { clip: rect(70px, 9999px, 120px, 0); } 50% { clip: rect(15px, 9999px, 55px, 0); } 100% { clip: rect(85px, 9999px, 130px, 0); } }
-
-        .click-prompt { position: absolute; bottom: 40px; color: rgba(0, 242, 255, 0.4); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
-
-        /* ANA İÇERİK YAPISI (TAM EKRAN MODELİ) */
-        #main-content { 
-            display: none; opacity: 0; transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1); 
-            width: 100%; height: 100%; position: relative;
+        @keyframes intro-glitch-1 {
+            0% { clip: rect(20px, 9999px, 40px, 0); }
+            50% { clip: rect(80px, 9999px, 110px, 0); }
+            100% { clip: rect(5px, 9999px, 25px, 0); }
+        }
+        @keyframes intro-glitch-2 {
+            0% { clip: rect(70px, 9999px, 120px, 0); }
+            50% { clip: rect(15px, 9999px, 55px, 0); }
+            100% { clip: rect(85px, 9999px, 130px, 0); }
         }
 
-        /* Sabit Üst Menü */
+        .click-prompt {
+            position: absolute; bottom: 40px; color: rgba(0, 242, 255, 0.4);
+            font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        /* ANA İÇERİK YAPISI */
+        #main-content { display: none; opacity: 0; transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+
         nav {
-            position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 40px; z-index: 100; background: linear-gradient(to bottom, rgba(1,1,3,0.8), rgba(1,1,3,0));
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 40px 60px; max-width: 1400px; margin: 0 auto;
         }
-        .brand-wrapper { display: flex; align-items: center; gap: 12px; cursor: pointer; text-decoration: none; color: inherit; }
-        .glitch-logo { font-size: 1.6rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 900; position: relative; color: #fff; }
+
+        .brand-wrapper { display: flex; align-items: center; gap: 15px; position: relative; cursor: pointer; text-decoration: none; color: inherit; }
+        
+        .glitch-logo { 
+            font-size: 2.2rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 900;
+            position: relative; color: #fff;
+            animation: glitch-skew 4s infinite linear alternate-reverse;
+        }
         .glitch-logo span { color: var(--neon); }
-        .final-logo { width: 40px; height: 40px; filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.3)); }
-        .dev-tag { color: #666; font-family: monospace; font-size: 0.8rem; letter-spacing: 1px; }
+        
+        .glitch-logo::before, .glitch-logo::after {
+            content: 'THEABDOINC'; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg);
+        }
+        .glitch-logo::before { left: 2px; text-shadow: -2px 0 var(--neon-magenta); clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+        .glitch-logo::after { left: -2px; text-shadow: -2px 0 var(--neon), 0 2px var(--neon-magenta); clip: rect(85px, 450px, 140px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse; }
 
-        /* REELS TARZI AKIŞ ALANI (SCROLL SNAP) */
-        .reels-container {
-            width: 100%; height: 100%;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory; /* Aşağı kaydırınca tık diye oturmasını sağlar */
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.3deg); }
+            5% { clip: rect(112px, 9999px, 76px, 0); transform: skew(0.1deg); }
+            10% { clip: rect(85px, 9999px, 5px, 0); transform: skew(-0.2deg); }
+            100% { clip: rect(67px, 9999px, 43px, 0); transform: skew(0deg); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(76px, 9999px, 116px, 0); transform: skew(-0.1deg); }
+            100% { clip: rect(40px, 9999px, 90px, 0); transform: skew(0deg); }
+        }
+        @keyframes glitch-skew { 0% { transform: skew(1deg); } 10% { transform: skew(-1deg); } 100% { transform: skew(0deg); } }
+
+        .final-logo {
+            width: 50px; height: 50px; filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.3));
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .brand-wrapper:hover .final-logo { transform: rotate(20deg) scale(1.15); filter: drop-shadow(0 0 15px var(--neon)); }
+        .dev-tag { color: #555; font-family: monospace; font-size: 0.9rem; letter-spacing: 2px; }
+
+        /* SAYFALAR */
+        .page-view { display: none; }
+        .page-view.active { display: block; animation: pageFadeIn 0.6s ease forwards; }
+        @keyframes pageFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero-section { text-align: center; margin: 40px 0; position: relative; display: flex; flex-direction: column; align-items: center; }
+        .hero-section h2 { font-size: 3.5rem; letter-spacing: 4px; text-transform: uppercase; font-weight: 900; color: #fff; text-shadow: 0 0 25px rgba(0, 242, 255, 0.15); }
+        .hero-section p { color: var(--neon); font-size: 1rem; font-family: monospace; letter-spacing: 3px; text-transform: uppercase; margin-top: 8px; opacity: 0.8; }
+
+        .showcase-status {
+            display: flex; gap: 25px; margin-top: 15px; font-family: monospace; font-size: 0.75rem; color: #444;
+            border-top: 1px solid rgba(255, 255, 255, 0.03); border-bottom: 1px solid rgba(255, 255, 255, 0.03); padding: 6px 20px;
+        }
+        .status-node { display: flex; align-items: center; gap: 6px; }
+        .status-node span { color: #888; }
+        .pulse-dot { width: 6px; height: 6px; background: var(--neon); border-radius: 50%; animation: pulse-glow 1.5s infinite ease-in-out; }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; box-shadow: 0 0 8px var(--neon); } }
+
+        /* PORTFÖY GRID YAPISI */
+        .main-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;
+            max-width: 1100px; margin: 0 auto; padding: 0 40px; align-items: stretch;
         }
 
-        /* Her Bir Reels Bölümü (Tam Ekran) */
-        .reels-section {
-            width: 100%; height: 100vh;
-            scroll-snap-align: start;
-            scroll-snap-stop: always;
-            position: relative;
-            display: flex; justify-content: center; align-items: center;
-            background: #000;
+        .card {
+            background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 20px;
+            padding: 16px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            cursor: pointer; text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between;
         }
+        .card:hover { border-color: rgba(0, 242, 255, 0.4); transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 242, 255, 0.05); }
 
-        /* Tam Ekran Video Çerçevesi */
-        .reels-video-wrapper {
-            width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1;
-        }
-        .reels-video-wrapper video, .reels-video-wrapper img {
-            width: 100%; height: 100%; object-fit: cover; /* Videoyu tam ekran kaplatır */
-        }
+        .video-wrapper { width: 100%; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 14px; background: #000; position: relative; }
+        .video-wrapper video, .video-wrapper img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); transition: all 0.5s ease; }
+        .card:hover video, .card:hover img { filter: brightness(1) saturate(1.1); transform: scale(1.02); }
 
-        /* Video Üzerindeki Karartma Katmanı */
-        .video-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.5) 100%);
-            z-index: 2; pointer-events: none;
+        .info { padding: 18px 4px 4px 4px; display: flex; justify-content: space-between; align-items: center; }
+        .info h3 { font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .tech-badge { font-family: monospace; color: var(--neon); font-size: 0.7rem; border: 1px solid rgba(0, 242, 255, 0.15); padding: 4px 10px; border-radius: 20px; }
+        
+        /* DETAYLI GALERİ ALANI */
+        .gallery-container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .gallery-matrix { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; align-items: stretch; }
+        
+        .gallery-node {
+            background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 18px;
+            padding: 12px; transition: all 0.4s ease; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
         }
+        .gallery-node:hover { border-color: var(--neon); transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 242, 255, 0.05); }
+        
+        .gallery-video-wrapper { width: 100%; aspect-ratio: 9 / 16; overflow: hidden; border-radius: 12px; background: #000; position: relative; }
+        .gallery-node video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); transition: all 0.4s ease; }
+        .gallery-node:hover video { filter: brightness(1); }
 
-        /* REELS ARAYÜZÜ BİLGİ ALANI (SOL ALT CORNER) */
-        .reels-meta {
-            position: absolute; bottom: 40px; left: 30px; z-index: 3;
-            max-width: 75%; display: flex; flex-direction: column; gap: 10px;
-            pointer-events: none;
-        }
-        .reels-meta h3 { font-size: 1.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        .reels-meta p { font-size: 0.9rem; color: #ccc; line-height: 1.4; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
-        .reels-meta .badge-row { display: flex; gap: 10px; align-items: center; pointer-events: auto; }
-        .tech-badge { font-family: monospace; color: var(--neon); font-size: 0.75rem; border: 1px solid var(--neon); padding: 5px 14px; border-radius: 20px; background: rgba(0, 242, 255, 0.1); }
-        .action-link-btn { text-decoration: none; font-family: monospace; font-size: 0.75rem; font-weight: bold; color: #000; background: var(--neon); padding: 6px 14px; border-radius: 20px; box-shadow: 0 0 10px rgba(0,242,255,0.4); }
+        .gallery-info { padding: 12px 4px 4px 4px; display: flex; justify-content: space-between; align-items: center; }
+        .gallery-info span { font-family: monospace; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: #888; }
+        .gallery-node:hover .gallery-info span { color: #fff; }
 
-        /* REELS SAĞ TARAF BUTON PANELİ (DİKEY INTERACTION) */
-        .reels-side-panel {
-            position: absolute; bottom: 50px; right: 25px; z-index: 3;
-            display: flex; flex-direction: column; gap: 20px; align-items: center;
+        /* FOOTER */
+        footer { text-align: center; padding: 100px 0 40px 0; font-family: monospace; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+        .btn-container { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; }
+        .footer-btn {
+            background: rgba(0, 242, 255, 0.05); color: var(--neon); border: 1px solid rgba(0, 242, 255, 0.3); padding: 10px 24px;
+            font-family: monospace; font-size: 0.9rem; font-weight: bold; border-radius: 30px; cursor: pointer; transition: all 0.4s ease;
+            letter-spacing: 2px; text-transform: uppercase; text-decoration: none; display: inline-block;
         }
-        .side-icon-btn {
-            width: 50px; height: 50px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #fff;
-            cursor: pointer; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: all 0.3s;
-        }
-        .side-icon-btn:hover { border-color: var(--neon); color: var(--neon); transform: scale(1.1); }
-        .side-icon-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        .footer-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); transform: translateY(-2px); }
+        .copyright { color: #444; font-size: 0.85rem; letter-spacing: 1px; margin-top: 10px; }
 
-        /* INTERACTION POPUPS / MODALLAR */
+        /* MODALLAR */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
             z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; display: flex; justify-content: center; align-items: center;
         }
         .modal-overlay.active { opacity: 1; pointer-events: all; }
         .modal-box {
-            background: #09090d; border: 1px solid rgba(0, 242, 255, 0.2); padding: 30px; max-width: 500px; width: 90%; border-radius: 24px; position: relative; transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #09090d; border: 1px solid rgba(0, 242, 255, 0.2); padding: 40px; max-width: 600px; width: 90%; border-radius: 24px;
+            position: relative; transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .modal-overlay.active .modal-box { transform: scale(1); }
-        .modal-box h4 { font-size: 1.6rem; color: var(--neon); margin-bottom: 5px; text-transform: uppercase; }
-        .modal-box .sub-title { font-family: monospace; color: #555; margin-bottom: 20px; font-size: 0.85rem; }
-        .modal-box p { color: #ccc; line-height: 1.6; font-size: 1rem; }
-        .close-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; color: #555; font-size: 1.8rem; cursor: pointer; }
+        .modal-box h4 { font-size: 1.8rem; color: var(--neon); margin-bottom: 5px; text-transform: uppercase; }
+        .modal-box .sub-title { font-family: monospace; color: #555; margin-bottom: 20px; font-size: 0.9rem; }
+        .modal-box p { color: #ccc; line-height: 1.7; font-size: 1.05rem; }
+        .close-btn { position: absolute; top: 20px; right: 25px; background: none; border: none; color: #555; font-size: 1.8rem; cursor: pointer; }
         .close-btn:hover { color: var(--neon); }
 
-        .social-matrix { display: flex; flex-direction: column; gap: 12px; }
+        .social-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .social-node {
-            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 14px; border-radius: 12px; text-decoration: none; color: #fff;
-            display: flex; justify-content: space-between; align-items: center; transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 12px; text-decoration: none; color: #fff;
+            display: flex; flex-direction: column; transition: all 0.3s;
         }
-        .social-node:hover { border-color: var(--neon); background: rgba(0, 242, 255, 0.03); }
+        .social-node:hover { border-color: var(--neon); background: rgba(0, 242, 255, 0.03); transform: translateY(-3px); }
         .social-node .username { font-weight: bold; font-family: monospace; }
+        .social-node:hover .username { color: var(--neon); }
         .social-node .tag { font-size: 0.7rem; color: #555; text-transform: uppercase; }
 
-        /* MOBİL VE EKRAN UYUMLULUĞU */
+        /* MOBİL REELS UYUMLU AKIŞ */
         @media (max-width: 768px) {
-            nav { padding: 15px 20px; }
+            nav { padding: 30px 24px; }
             .dev-tag { display: none; }
-            .reels-meta { left: 20px; bottom: 30px; max-width: 80%; }
-            .reels-meta h3 { font-size: 1.4rem; }
-            .reels-meta p { font-size: 0.8rem; }
-            .reels-side-panel { right: 15px; bottom: 35px; gap: 15px; }
-            .side-icon-btn { width: 44px; height: 44px; }
+            .hero-section h2 { font-size: 2.2rem; }
+            .main-grid { grid-template-columns: 1fr; gap: 40px; padding: 0 24px; max-width: 450px; }
+            .gallery-matrix { grid-template-columns: 1fr; gap: 40px; max-width: 450px; margin: 0 auto; }
+            .video-wrapper, .gallery-video-wrapper { aspect-ratio: 9 / 16; }
+            .social-matrix { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -186,7 +261,6 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <!-- INTRO VE LOADER ALANI -->
     <div id="loader">
         <div class="terminal-text" id="terminal">
             <p>> THEABDOINC_CORE.exe loaded...</p>
@@ -203,184 +277,115 @@
         <div class="click-prompt" id="prompt-txt">Interactive Audio Interface Active</div>
     </div>
 
-    <!-- ANA İÇERİK KATMANI -->
     <div id="main-content">
         <nav>
-            <div class="brand-wrapper" onclick="resetScroll()">
+            <div class="brand-wrapper" onclick="showPage('home-page')">
                 <img src="theabdoinclogo.png" class="final-logo" alt="Logo">
-                <h1 class="glitch-logo">THEABDO<span>INC</span></h1>
+                <h1 class="glitch-logo" data-text="THEABDOINC">THEABDO<span>INC</span></h1>
             </div>
             <span class="dev-tag">&lt; INDIE GAME DEVELOPER /&gt;</span>
         </nav>
 
-        <!-- REELS FORMUNDA KAYDIRMALI ANA AKIŞ -->
-        <div class="reels-container" id="reels-feed">
-            
-            <!-- Video 1: Z Block Crush -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="zblock.mp4" loop playsinline muted preload="auto"></video>
+        <div id="home-page" class="page-view active">
+            <section class="hero-section">
+                <h2>ARCHIVE // DATABASE</h2>
+                <p>// Core Repositories & Visual Nodes</p>
+                <div class="showcase-status">
+                    <div class="status-node"><div class="pulse-dot"></div> CORE_STATUS: <span>ACTIVE</span></div>
+                    <div class="status-node">FRAME_RATE: <span>90 FPS</span></div>
                 </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row">
+            </section>
+
+            <div class="main-grid">
+                <div class="card" id="zblock-card">
+                    <div class="video-wrapper">
+                        <video id="main-video" src="zblock.mp4" controls preload="metadata" playsinline muted></video>
+                    </div>
+                    <div class="info">
+                        <h3>Z Block Crush</h3>
                         <span class="tech-badge">C# / UNITY</span>
                     </div>
-                    <h3>Z Block Crush</h3>
-                    <p>Unity oyun motoruyla geliştirilmiş, strateji ve bulmaca dinamiklerine sahip mobil oyun projem.</p>
                 </div>
-            </section>
-
-            <!-- Video 2: Car Render 1 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="finaş.mp4" loop playsinline muted preload="auto"></video>
+      
+                <div class="card" onclick="showPage('dataset-page')">
+                    <div class="video-wrapper">
+                        <img src="hyper.jpg" alt="Project Image">
+                    </div>
+                    <div class="info">
+                        <h3>My all project category</h3>
+                        <span class="tech-badge">BLENDER / CYCLES RENDER</span>
+                    </div>
                 </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>Chiaroscuro Motion</h3>
-                    <p>Işık ve gölge kontrastının (Chiaroscuro) doruk noktalarında gezinen sinematik araba çalışması.</p>
-                </div>
-            </section>
-
-            <!-- Video 3: Car Render 2 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="letme derive.mp4" loop playsinline muted preload="auto"></video>
-                </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>Photorealistic Drive</h3>
-                    <p>Gerçekçi materyal kalitesi ve çevresel yansımaların kusursuz simülasyonu.</p>
-                </div>
-            </section>
-
-            <!-- Video 4: Car Render 3 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="best94.mp4" loop playsinline muted preload="auto"></video>
-                </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>Realistic Art Node</h3>
-                    <p>Sınırları zorlayan Cycles render motoru algoritması ile hazırlanmış otomotiv sanatı.</p>
-                </div>
-            </section>
-
-            <!-- Video 5: Car Render 4 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="gkhkh.mp4" loop playsinline muted preload="auto"></video>
-                </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>BMW Motion Studio</h3>
-                    <p>Hareketli kamera açıları ve dinamik kurgunun bir araya geldiği stüdyo çalışması.</p>
-                </div>
-            </section>
-
-            <!-- Video 6: Car Render 5 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="Comp 1_1.mp4" loop playsinline muted preload="auto"></video>
-                </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>Mercedes x BMW</h3>
-                    <p>İki dev markanın estetiğini siber punk elementleriyle buluşturan özel çalışma.</p>
-                </div>
-            </section>
-
-            <!-- Video 7: Car Render 6 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="Comp 1_3.mp4" loop playsinline muted preload="auto"></video>
-                </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>Cinematic Style</h3>
-                    <p>Renk derecelendirmesi ve atmosferik sis efektleriyle sinema perdesi kalitesinde render.</p>
-                </div>
-            </section>
-
-            <!-- Video 8: Car Render 7 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="3.mp4" loop playsinline muted preload="auto"></video>
-                </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>BMW x Realistic</h3>
-                    <p>Hız ve asfalta yakın takip açılarının gerçekçi simülasyonu.</p>
-                </div>
-            </section>
-
-            <!-- Video 9: Car Render 8 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="new.mp4" loop playsinline muted preload="auto"></video>
-                </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>Mcqueen x Ford</h3>
-                    <p>Klasik ve ikonik çizgilerin modern kompozisyon teknikleriyle yeniden yorumlanması.</p>
-                </div>
-            </section>
-
-            <!-- Video 10: Car Render 9 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="Comp 1_5.mp4" loop playsinline muted preload="auto"></video>
-                </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>Project #09 Node</h3>
-                    <p>Dinamik ışık değişimlerinin araç kaportası üzerindeki akış çalışması.</p>
-                </div>
-            </section>
-
-            <!-- Video 11: Car Render 10 -->
-            <section class="reels-section">
-                <div class="reels-video-wrapper">
-                    <video src="last prohj.mp4" loop playsinline muted preload="auto"></video>
-                </div>
-                <div class="video-overlay"></div>
-                <div class="reels-meta">
-                    <div class="badge-row"><span class="tech-badge">Blender / Cycles</span></div>
-                    <h3>High Quality Render</h3>
-                    <p>Detayların, tekstürlerin ve optimizasyonun en üst düzeye ulaştığı final arşivi.</p>
-                </div>
-            </section>
-
+            </div>
         </div>
 
-        <!-- SAĞ SABİT INTERACTION PANELİ -->
-        <div class="reels-side-panel">
-            <!-- Profil / Hakkımda Butonu -->
-            <div class="side-icon-btn" id="open-about" title="About Me">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <div id="dataset-page" class="page-view">
+            <section class="hero-section">
+                <h2>BLENDER & CYCLES DATASET</h2>
+                <p>// Repository nodes (CLICK CARD TO PLAY / PAUSE)</p>
+                <div class="showcase-status">
+                    <div class="status-node"><div class="pulse-dot"></div> ENGINE: <span>CYCLES RENDER</span></div>
+                    <div class="status-node">TOTAL_NODES: <span>10 ARCHIVES</span></div>
+                </div>
+            </section>
+
+            <div class="gallery-container">
+                <div class="gallery-matrix">
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="finaş.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>CHIAROSCURO</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="letme derive.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>PHOTOREALISTIC</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="best94.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>REALISTIC ART</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="gkhkh.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>BMW MOTION STUDIO</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="Comp 1_1.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>Mercedes x Bmw</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="Comp 1_3.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>Cinematic Style</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="3.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>Bmw x REALISTIC</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="new.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>Mcqueen x Ford</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="Comp 1_5.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>Project #09</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                    <div class="gallery-node">
+                        <div class="gallery-video-wrapper"><video src="last prohj.mp4" controls playsinline preload="metadata" muted></video></div>
+                        <div class="gallery-info"><span>High Quality</span><span class="tech-badge">Cycles</span></div>
+                    </div>
+                </div>
             </div>
-            <!-- Sosyal Medya Linkleri Butonu -->
-            <div class="side-icon-btn" id="open-social" title="Social Channels">
-                <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91s-1.31-2.92-2.92-2.92z"/></svg>
-            </div>
-            <!-- WhatsApp İletişim Butonu -->
-            <a href="https://wa.me/905317306947?text=Hello%2C%20I%20would%20like%20to%20get%20information%20about%20your%20project%20availability." target="_blank" class="side-icon-btn" title="Contact via WhatsApp">
-                <svg viewBox="0 0 24 24"><path d="M20.22 3.72C18.02 1.52 15.1 0.31 12.02 0.31c-6.25 0-11.34 5.08-11.34 11.33 0 2 .52 3.95 1.52 5.68l-1.62 5.92 6.07-1.59c1.67.91 3.53 1.39 5.43 1.4h.01c6.24 0 11.33-5.08 11.33-11.33 0-3.03-1.18-5.88-3.39-8.08zm-8.2 17.51c-1.7 0-3.37-.46-4.83-1.32l-.35-.21-3.6.94.96-3.51-.23-.37c-.94-1.51-1.44-3.26-1.44-5.06 0-5.41 4.41-9.81 9.83-9.81 2.63 0 5.09 1.02 6.95 2.88 1.86 1.86 2.88 4.34 2.88 6.96-.01 5.41-4.42 9.82-9.84 9.82z"/></svg>
-            </a>
         </div>
+
+        <footer>
+            <div class="btn-container">
+                <button class="footer-btn" id="open-about">About Me</button>
+                <button class="footer-btn" id="open-social">Social Media</button>
+                <button class="footer-btn" id="back-to-core-btn" style="display:none;" onclick="showPage('home-page')">Return to Core</button>
+                <a href="https://wa.me/905317306947?text=Hello%2C%20I%20would%20like%20to%20get%20information%20about%20your%20project%20availability." target="_blank" class="footer-btn">Contact</a>
+            </div>
+            <div class="copyright">© 2026 THEABDOINC. All Rights Reserved.</div>
+        </footer>
     </div>
 
-    <!-- POPUP MODALLAR -->
     <div class="modal-overlay" id="about-modal">
         <div class="modal-box">
             <button class="close-btn" id="close-about">&times;</button>
@@ -402,7 +407,7 @@
                 </a>
                 <a href="https://www.instagram.com/fvdga/" target="_blank" class="social-node">
                     <span class="username">@fvdga</span>
-                    <span class="tag">// Gaming / Creator</span>
+                    <span class="tag">// Gaming / Content Creator</span>
                 </a>
                 <a href="https://www.instagram.com/vx.kingdom/" target="_blank" class="social-node">
                     <span class="username">@vx.kingdom</span>
@@ -416,7 +421,6 @@
         </div>
     </div>
 
-    <!-- INTERACTIVE SCRIPTS -->
     <script>
         let audioCtx = null;
         function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
@@ -438,23 +442,48 @@
             osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now);
             osc.frequency.exponentialRampToValueAtTime(40, now + 1.2);
             gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.001, now + 1.5);
+            
+            let highOsc = audioCtx.createOscillator(), highGain = audioCtx.createGain();
+            highOsc.type = 'triangle'; highOsc.frequency.setValueAtTime(800, now);
+            highOsc.frequency.exponentialRampToValueAtTime(300, now + 0.5);
+            highGain.gain.setValueAtTime(0.08, now); highGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
             osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(now + 1.5);
+            highOsc.connect(highGain); highGain.connect(audioCtx.destination);
+            osc.start(); osc.stop(now + 1.5); highOsc.start(); highOsc.stop(now + 0.6);
         }
 
+        // YAZI GELİRKEN ARKA ARKAYA TETİKLENEN GLITCH SESİ SENTEZLEYİCİSİ
         function playGlitchTextSound() {
             if (!audioCtx) return;
             let now = audioCtx.currentTime;
             for (let i = 0; i < 6; i++) {
                 let timeOffset = now + (i * 0.08);
-                let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                
+                // Cızırtılı ve düzensiz siber frekanslar
                 osc.type = Math.random() > 0.5 ? 'square' : 'sawtooth';
                 osc.frequency.setValueAtTime(Math.random() * 800 + 200, timeOffset);
+                
                 gain.gain.setValueAtTime(0.03, timeOffset);
                 gain.gain.exponentialRampToValueAtTime(0.0001, timeOffset + 0.06);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(timeOffset); osc.stop(timeOffset + 0.06);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(timeOffset);
+                osc.stop(timeOffset + 0.06);
             }
+        }
+
+        function playHoverSound() {
+            if (!audioCtx) return;
+            let now = audioCtx.currentTime, osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(1200, now);
+            osc.frequency.exponentialRampToValueAtTime(1600, now + 0.05);
+            gain.gain.setValueAtTime(0.015, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(now + 0.05);
         }
 
         function playInterfaceOpen() {
@@ -470,43 +499,54 @@
         function playCloseSound() {
             if (!audioCtx) return;
             let now = audioCtx.currentTime, oscNode = audioCtx.createOscillator(), gain = audioCtx.createGain();
-            oscNode.type = 'sine'; oscNode.frequency.setValueAtTime(400, now);
+            oscNode.type = 'sine'; oscNode.frequency.setValueAtTime(400, now); oscNode.frequency.setValueAtTime(250, now + 0.08);
             gain.gain.setValueAtTime(0.04, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
             oscNode.connect(gain); gain.connect(audioCtx.destination);
             oscNode.start(); oscNode.stop(now + 0.2);
         }
 
-        function resetScroll() {
-            document.getElementById('reels-feed').scrollTo({ top: 0, behavior: 'smooth' });
+        function showPage(pageId) {
+            playInterfaceOpen();
+            document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            
+            const backBtn = document.getElementById('back-to-core-btn');
+            if(pageId === 'dataset-page') {
+                backBtn.style.display = 'inline-block';
+            } else {
+                backBtn.style.display = 'none';
+                document.querySelectorAll('.gallery-node video').forEach(v => { v.pause(); v.currentTime = 0; });
+            }
         }
 
-        // Background Matrix Canvas
+        // Arka Plan Canvas Ağ Animasyonu
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-        let nodes = [];
+        let nodes = []; const mouse = { x: null, y: null, radius: 200 };
         function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas); resizeCanvas();
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
 
         class Node {
             constructor() {
                 this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5; this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 1.5 + 1;
+                this.vx = (Math.random() - 0.5) * 0.6; this.vy = (Math.random() - 0.5) * 0.6;
+                this.radius = Math.random() * 2 + 1;
             }
             update() {
                 this.x += this.vx; this.y += this.vy;
                 if (this.x < 0 || this.x > canvas.width) this.vx *= -1; if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
             }
-            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0, 242, 255, 0.25)'; ctx.fill(); }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0, 242, 255, 0.4)'; ctx.fill(); }
         }
-        function initNodes() { nodes = []; let count = (canvas.width * canvas.height) / 9000; for(let i = 0; i < count; i++) nodes.push(new Node()); }
+        function initNodes() { nodes = []; let count = (canvas.width * canvas.height) / 7500; for(let i = 0; i < count; i++) nodes.push(new Node()); }
         initNodes();
         function connectNodes() {
             for (let i = 0; i < nodes.length; i++) {
                 for (let j = i + 1; j < nodes.length; j++) {
                     let dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y, dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 100) {
-                        let opacity = (1 - (dist / 100)) * 0.08;
+                    if (dist < 120) {
+                        let opacity = (1 - (dist / 120)) * 0.12;
                         ctx.strokeStyle = `rgba(0, 242, 255, ${opacity})`; ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
                     }
                 }
@@ -515,48 +555,7 @@
         function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); nodes.forEach(node => { node.update(); node.draw(); }); connectNodes(); requestAnimationFrame(animate); }
         animate();
 
-        // REELS AKIŞI VE SENSÖR KONTROLLERİ (Kaydırdıkça Video Oynatma Motoru)
-        const reelsFeed = document.getElementById('reels-feed');
-        
-        function handleVideoPlayback() {
-            const sections = document.querySelectorAll('.reels-section');
-            const containerHeight = reelsFeed.clientHeight;
-            const scrollTop = reelsFeed.scrollTop;
-
-            sections.forEach((section) => {
-                const video = section.querySelector('video');
-                if (!video) return;
-
-                const sectionTop = section.offsetTop;
-                // Eğer bu video bölümü şu an tam ekranda duruyorsa
-                if (Math.abs(sectionTop - scrollTop) < containerHeight / 2) {
-                    if (video.paused) {
-                        video.play().catch(err => console.log("Oynatma otomatik başlatılamadı, etkileşim bekleniyor."));
-                    }
-                } else {
-                    // Ekrandan çıkan videoları durdur ve başa sar (performans ve ses çakışmaması için)
-                    video.pause();
-                    video.currentTime = 0;
-                }
-            });
-        }
-
-        // Scroll bittiğinde veya kayarken dinamik kontrol tetiklemesi
-        reelsFeed.addEventListener('scroll', handleVideoPlayback);
-
-        // Ekranın herhangi bir yerine tıklandığında videonun sesini açma / kapama (Mute toggle)
-        document.querySelectorAll('.reels-section').forEach(section => {
-            section.addEventListener('click', (e) => {
-                // Eğer sağ panele veya linke tıklanmadıysa videoyu sessizden çıkar/sustur
-                if (e.target.closest('.reels-side-panel') || e.target.closest('.badge-row')) return;
-                const video = section.querySelector('video');
-                if (video) {
-                    video.muted = !video.muted;
-                }
-            });
-        });
-
-        // LOADER PROSESSING
+        // GELİŞMİŞ SİNEMATİK LOADER AKIŞ KONTROLÜ
         document.addEventListener("DOMContentLoaded", () => {
             const loader = document.getElementById('loader'), terminal = document.getElementById('terminal');
             const centerLogo = document.getElementById('center-logo'), mainContent = document.getElementById('main-content'), promptTxt = document.getElementById('prompt-txt');
@@ -567,11 +566,13 @@
                 if (executed) return; executed = true;
                 initAudio(); promptTxt.style.display = 'none';
 
+                // Terminal akış sesleri
                 let tickCount = 0;
                 let tickInterval = setInterval(() => {
                     if (tickCount < 8) { playDataTick(0.05, 600 + (tickCount * 100)); tickCount++; } else { clearInterval(tickInterval); }
-                }, 180);
+                }, 200);
 
+                // Aşama 1: Terminal kapanıyor, Logo geliyor ve 2 Saniye Kalıyor
                 setTimeout(() => {
                     terminal.style.display = 'none'; 
                     centerLogo.style.display = 'block';
@@ -583,27 +584,52 @@
                         centerLogo.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'; 
                     }, 50);
 
-                    // Logo geldikten tam 2 Saniye sonra "THEABDOINC" Glitch text ve Sesi tetiklenir
+                    // Aşama 2: Logo geldikten tam 2 Saniye sonra altındaki GELİŞMİŞ YAZI ve GLITCH SESI tetikleniyor
                     setTimeout(() => {
                         introText.classList.add('animate-text');
                         playGlitchTextSound();
-                    }, 2000);
+                    }, 2000); // 2 saniye tam bekleme süresi
 
-                }, 1500);
+                }, 1600);
 
-                // Ana Akış Paneline Giriş
+                // Aşama 3: Tüm intro bittikten sonra ana arayüze geçiş yapılır
                 setTimeout(() => {
                     loader.style.opacity = '0'; loader.style.transition = 'opacity 0.6s ease'; mainContent.style.display = 'block';
-                    setTimeout(() => { 
-                        loader.style.display = 'none'; 
-                        mainContent.style.opacity = '1'; 
-                        // İlk videoyu otomatik olarak oynatmayı dene
-                        handleVideoPlayback();
-                    }, 600);
-                }, 5200);
+                    setTimeout(() => { loader.style.display = 'none'; mainContent.style.opacity = '1'; }, 600);
+                }, 5400); // Intro ses ve yazı bitişine göre senkronize edilen toplam süre
             });
 
-            // Modallar (About & Social)
+            // Z Block Crush Kart Kontrolleri
+            const mainVideo = document.getElementById('main-video');
+            if(mainVideo){
+                mainVideo.addEventListener('click', () => {
+                    if(mainVideo.paused){
+                        mainVideo.muted = false;
+                        mainVideo.play();
+                    } else {
+                        mainVideo.pause();
+                    }
+                });
+            }
+
+            // Galeri Kartları Video Kontrolleri
+            document.querySelectorAll('.gallery-node').forEach(node => {
+                const vid = node.querySelector('video');
+                if(!vid) return;
+
+                node.addEventListener('mouseenter', () => {
+                    playHoverSound();
+                    vid.play().catch(() => {});
+                });
+                node.addEventListener('mouseleave', () => {
+                    vid.pause(); vid.currentTime = 0;
+                });
+                node.addEventListener('click', () => {
+                    if(vid.paused) { vid.muted = false; vid.play(); } else { vid.pause(); }
+                });
+            });
+
+            // Modallar
             const openAbout = document.getElementById('open-about'), closeAbout = document.getElementById('close-about'), aboutModal = document.getElementById('about-modal');
             const openSocial = document.getElementById('open-social'), closeSocial = document.getElementById('close-social'), socialModal = document.getElementById('social-modal');
 
