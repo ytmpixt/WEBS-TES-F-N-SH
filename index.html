@@ -1,1483 +1,597 @@
 <!DOCTYPE html>
-<html lang="tr" class="core-production-environment">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="theme-color" content="#010102">
-    <meta name="description" content="THEABDOINC — High-Performance Mobile Creative Production Engine. Realtime computer graphics and software interfaces.">
-    <title>THEABDOINC — Mobile-First Ultra-Fidelity Creative Production Engine</title>
-    
-    <!-- MASTER FONTS LINKING -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- ENTERPRISE SEO SCHEMA INTEGRATION (JSON-LD) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "CreativeWorkSeries",
-      "name": "THEABDOINC Production Engine",
-      "author": {
-        "@type": "Organization",
-        "name": "THEABDOINC",
-        "url": "https://instagram.com/theabdo.inc"
-      },
-      "description": "High-fidelity production framework optimized for cutting-edge mobile touch environments.",
-      "genre": "Digital Creative Production"
-    }
-    </script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THEABDOINC | Indie Game Dev & 3D Artist</title>
     <style>
-        /* ---------------------------------------------------------------------
-           01. DESIGN TOKEN SPECIFICATIONS & VARIABLE MATRIX
-           --------------------------------------------------------------------- */
-        :root {
-            --bg-pure-black: #010102;
-            --bg-deep-matrix: #060609;
-            --bg-card-baseline: rgba(6, 6, 9, 0.6);
-            --bg-card-active: rgba(10, 11, 18, 0.95);
-            
-            --accent-master-blue: #1456ff;
-            --accent-cyber-cyan: #00f0ff;
-            --accent-neon-green: #39ff14;
-            
-            --text-absolute-white: #ffffff;
-            --text-high-contrast: #f0f0f5;
-            --text-muted-mid: #7e808c;
-            --text-dark-subtle: #2c2d35;
-            --text-terminal-green: #00ff66;
-            
-            --border-ultra-thin: rgba(255, 255, 255, 0.04);
-            --border-active-glow: rgba(20, 86, 255, 0.4);
-            
-            --ease-elite-expo: cubic-bezier(0.19, 1, 0.22, 1);
-            --ease-fluid-spring: cubic-bezier(0.25, 1, 0.5, 1);
-            
-            --z-index-backdrop: 1;
-            --z-index-canvas: 10;
-            --z-index-base-ui: 20;
-            --z-index-navigation: 100;
-            --z-index-menu-overlay: 50000;
-            --z-index-lightbox: 100000;
+        :root { 
+            --neon: #00f2ff; 
+            --neon-magenta: #ff0055;
+            --bg: #010103; 
+            --card-bg: rgba(6, 6, 9, 0.65); 
         }
-
-        /* ---------------------------------------------------------------------
-           02. MASTER SYSTEM RESET & PERFORMANCE OPTIMIZATIONS
-           --------------------------------------------------------------------- */
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-drag: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            width: 100%;
-            min-height: 100vh;
-            background-color: var(--bg-pure-black);
-            color: var(--text-high-contrast);
-            font-family: 'Poppins', sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background: var(--bg); color: #fff; 
+            font-family: 'Segoe UI', system-ui, sans-serif;
             overflow-x: hidden;
-            scroll-behavior: smooth;
-            text-rendering: optimizeLegibility;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.003) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.003) 1px, transparent 1px);
-            background-size: 30px 30px;
-            z-index: var(--z-index-backdrop);
-            pointer-events: none;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at 50% 50%, transparent 20%, var(--bg-pure-black) 95%);
-            z-index: var(--z-index-backdrop);
-            pointer-events: none;
-        }
-
-        #quantum-noise-fluid-canvas {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: var(--z-index-canvas);
-            pointer-events: none;
-            opacity: 0.25;
-            transform: translate3d(0,0,0);
-        }
-
-        .production-master-shield {
-            position: relative;
-            width: 100%;
-            z-index: var(--z-index-base-ui);
-        }
-
-        /* ---------------------------------------------------------------------
-           03. SEMANTIC HEADER & NAVIGATION BRANDING
-           --------------------------------------------------------------------- */
-        header.studio-masthead-engine {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            padding: 24px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: var(--z-index-navigation);
-        }
-
-        @media (min-width: 768px) {
-            header.studio-masthead-engine {
-                position: fixed;
-                padding: 40px 60px;
-                background: linear-gradient(to bottom, var(--bg-pure-black) 0%, transparent 100%);
-                backdrop-filter: blur(10px);
-            }
-        }
-
-        .masthead-identity-block {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .identity-geometry-logo {
-            width: 20px;
-            height: 20px;
             position: relative;
         }
 
-        .identity-geometry-logo::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border: 1px dashed var(--text-absolute-white);
-            animation: constantRotation 30s linear infinite;
+        #bg-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1; pointer-events: none;
         }
 
-        @keyframes constantRotation {
-            100% { transform: rotate(360deg); }
-        }
-
-        .identity-text-nodes h1 {
-            font-size: 10px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--text-absolute-white);
-        }
-
-        .identity-text-nodes span {
-            font-family: 'Space Mono', monospace;
-            font-size: 7px;
-            color: var(--text-muted-mid);
-            display: block;
-        }
-
-        .masthead-action-trigger {
-            background: transparent;
-            border: 1px solid var(--border-active-glow);
-            padding: 10px 22px;
-            color: var(--text-absolute-white);
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            background-color: rgba(20, 86, 255, 0.1);
-            backdrop-filter: blur(5px);
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000; z-index: 9999; display: flex; 
+            flex-direction: column; justify-content: center; align-items: center;
+            font-family: monospace; color: var(--neon);
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(20, 86, 255, 0.2);
-            transition: all 0.3s var(--ease-fluid-spring);
-        }
-
-        .masthead-action-trigger:active {
-            transform: scale(0.95);
-            background-color: var(--accent-master-blue);
-        }
-
-        /* ---------------------------------------------------------------------
-           04. ULTRA-FIDELITY FULLSCREEN MATRIX MENU OVERLAY
-           --------------------------------------------------------------------- */
-        #matrix-fullscreen-navigation-menu {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: rgba(1, 1, 2, 0.98);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            z-index: var(--z-index-menu-overlay);
-            opacity: 0;
-            pointer-events: none;
-            will-change: opacity;
-            transition: opacity 0.5s var(--ease-elite-expo);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 40px 24px;
-        }
-
-        #matrix-fullscreen-navigation-menu.state-menu-active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .menu-system-close-node-btn {
-            position: absolute;
-            top: 24px;
-            right: 20px;
-            background: none;
-            border: 1px solid var(--border-ultra-thin);
-            color: var(--text-muted-mid);
-            padding: 10px 16px;
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-        }
-
-        @media (min-width: 768px) {
-            .menu-system-close-node-btn {
-                top: 40px;
-                right: 60px;
-                padding: 12px 24px;
-                font-size: 12px;
-            }
-        }
-
-        .menu-mainframe-content-injector {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        .menu-telemetry-header-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--accent-cyber-cyan);
-            border-bottom: 1px solid var(--border-ultra-thin);
-            padding-bottom: 12px;
-        }
-
-        .menu-video-pipeline-stream-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-height: 70vh;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        /* Custom scrollbar for clean index menu */
-        .menu-video-pipeline-stream-list::-webkit-scrollbar {
-            width: 2px;
-        }
-        .menu-video-pipeline-stream-list::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .menu-video-pipeline-stream-list::-webkit-scrollbar-thumb {
-            background: var(--text-dark-subtle);
-        }
-
-        .menu-video-interactive-row-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: rgba(255, 255, 255, 0.01);
-            border: 1px solid var(--border-ultra-thin);
-            padding: 16px 20px;
-            cursor: pointer;
-            will-change: transform, border-color;
-            transition: all 0.4s var(--ease-fluid-spring);
-        }
-
-        .menu-video-interactive-row-item:hover,
-        .menu-video-interactive-row-item:active {
-            border-color: var(--accent-master-blue);
-            background-color: rgba(20, 86, 255, 0.05);
-            transform: translate3d(5px, 0, 0);
-        }
-
-        .menu-row-meta-left-block {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .menu-row-meta-left-block .row-hash-index {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            color: var(--text-dark-subtle);
-        }
-
-        .menu-row-meta-left-block .row-core-title {
-            font-size: clamp(1.1rem, 3.5vw, 1.5rem);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-            color: var(--text-absolute-white);
-        }
-
-        .menu-row-meta-right-block .row-hud-badge {
-            font-family: 'Space Mono', monospace;
-            font-size: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-terminal-green);
-            border: 1px solid rgba(0, 255, 102, 0.15);
-            padding: 4px 10px;
-            background-color: rgba(0, 255, 102, 0.02);
-        }
-
-        /* ---------------------------------------------------------------------
-           05. HERO STAGE (STAGE ZERO)
-           --------------------------------------------------------------------- */
-        main.cinematic-hero-stage-engine {
-            width: 100%;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 120px 24px 60px 24px;
-            position: relative;
-        }
-
-        @media (min-width: 768px) {
-            main.cinematic-hero-stage-engine {
-                padding: 0 10%;
-            }
-        }
-
-        .stage-meta-diagnostic-tag {
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent-cyber-cyan);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .stage-meta-diagnostic-tag::before {
-            content: '';
-            display: block;
-            width: 20px;
-            height: 1px;
-            background-color: var(--accent-cyber-cyan);
-        }
-
-        .stage-title-display {
-            font-size: clamp(2rem, 11vw, 7.5rem);
-            font-weight: 900;
-            line-height: 0.95;
-            text-transform: uppercase;
-            letter-spacing: -0.03em;
-            margin-bottom: 30px;
-        }
-
-        .stage-title-display .hollow-structural-text {
-            color: transparent;
-            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
-            position: relative;
-            display: inline-block;
-        }
-
-        .stage-title-display .hollow-structural-text::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: var(--text-absolute-white);
-            -webkit-text-stroke: 0px transparent;
-            clip-path: inset(0 100% 0 0);
-            will-change: clip-path;
-            transition: clip-path 1.6s var(--ease-elite-expo);
-        }
-
-        .stage-title-display.reveal-active .hollow-structural-text::after {
-            clip-path: inset(0 0 0 0);
-        }
-
-        .stage-parametric-description {
-            font-size: clamp(0.85rem, 4vw, 1.15rem);
-            color: var(--text-muted-mid);
-            max-width: 650px;
-            line-height: 1.7;
-            font-weight: 300;
-            opacity: 0;
-            transform: translate3d(0, 15px, 0);
-            will-change: transform, opacity;
-            transition: opacity 1.2s var(--ease-fluid-spring), transform 1.2s var(--ease-fluid-spring);
-            transition-delay: 0.3s;
-        }
-
-        .stage-title-display.reveal-active + .stage-parametric-description {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-        }
-
-        /* ---------------------------------------------------------------------
-           06. SHOWCASE SYSTEM ARCHITECTURE PANEL
-           --------------------------------------------------------------------- */
-        .showcase-matrix-wrapper-panel {
-            width: 100%;
-            padding: 60px 20px;
-            margin: 0 auto;
-        }
-
-        @media (min-width: 768px) {
-            .showcase-matrix-wrapper-panel {
-                max-width: 1600px;
-                padding: 120px 60px;
-            }
-        }
-
-        .matrix-section-header {
-            margin-bottom: 40px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            border-bottom: 1px solid var(--border-ultra-thin);
-            padding-bottom: 30px;
-        }
-
-        @media (min-width: 992px) {
-            .matrix-section-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: flex-end;
-            }
-        }
-
-        .matrix-title-block {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .matrix-title-block span {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent-cyber-cyan);
-        }
-
-        .matrix-title-block h2 {
-            font-size: clamp(1.8rem, 6vw, 3rem);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-        }
-
-        .matrix-filter-dock-station {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 10px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .matrix-filter-dock-station::-webkit-scrollbar {
-            display: none;
-        }
-
-        .filter-node-trigger {
-            background-color: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-ultra-thin);
-            color: var(--text-muted-mid);
-            padding: 10px 20px;
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-        }
-
-        .filter-node-trigger.active-matrix-node {
-            color: var(--text-absolute-white);
-            border-color: var(--accent-master-blue);
-            background-color: rgba(20, 86, 255, 0.1);
-        }
-
-        /* ---------------------------------------------------------------------
-           07. ADAPTIVE BENTO GRID SİSTEMİ (PRODUCTION GRADE)
-           --------------------------------------------------------------------- */
-        .bento-grid-exhibition-mainframe {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-        }
-
-        @media (min-width: 992px) {
-            .bento-grid-exhibition-mainframe {
-                display: grid;
-                grid-template-columns: repeat(12, 1fr);
-                gap: 40px;
-            }
-            .bento-span-12 { grid-column: span 12; }
-            .bento-span-8 { grid-column: span 8; }
-            .bento-span-6 { grid-column: span 6; }
-            .bento-span-4 { grid-column: span 4; }
-            
-            .ratio-cinematic { aspect-ratio: 21/9; }
-            .ratio-landscape { aspect-ratio: 16/9; }
-            .ratio-vertical { aspect-ratio: 4/5; }
-        }
-
-        @media (max-width: 991px) {
-            .bento-showcase-module-card {
-                aspect-ratio: 16/10 !important;
-            }
-        }
-
-        .bento-showcase-module-card {
-            position: relative;
-            background-color: var(--bg-card-baseline);
-            border: 1px solid var(--border-ultra-thin);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            will-change: transform, border-color;
-            transition: border-color 0.6s var(--ease-elite-expo), background-color 0.6s var(--ease-elite-expo);
-            cursor: pointer;
-        }
-
-        .bento-media-viewport-shield {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bento-media-viewport-shield video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            pointer-events: none;
-            filter: saturate(0.8) brightness(0.8);
-            will-change: transform;
-            transition: transform 1.2s var(--ease-elite-expo);
-        }
-
-        .custom-graphics-overlay-layer {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(1, 1, 2, 0.95) 0%, rgba(1, 1, 2, 0.5) 60%, rgba(1, 1, 2, 0.1) 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding: 24px;
-            opacity: 0;
-            transform: translate3d(0, 10px, 0);
-            will-change: opacity, transform;
-            transition: opacity 0.6s var(--ease-fluid-spring), transform 0.6s var(--ease-fluid-spring);
-            z-index: 5;
-        }
-
-        .bento-showcase-module-card.viewport-visible .custom-graphics-overlay-layer {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
         }
         
-        .bento-showcase-module-card.viewport-visible .bento-media-viewport-shield video {
-            transform: scale(1.03);
+        .terminal-text { display: flex; flex-direction: column; gap: 5px; }
+        .blink { animation: blinker 0.8s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+
+        .intro-logo {
+            width: 150px; height: 150px; opacity: 0; transform: scale(0.7);
+            filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.6));
+            margin-bottom: 20px; display: none;
         }
 
-        .overlay-classification-serial {
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent-cyber-cyan);
-            margin-bottom: 6px;
+        .click-prompt {
+            position: absolute; bottom: 40px; color: rgba(0, 242, 255, 0.4);
+            font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase;
         }
 
-        .overlay-module-title {
-            font-size: clamp(1.3rem, 4vw, 2rem);
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-            line-height: 1.1;
-            margin-bottom: 8px;
+        #main-content { opacity: 0; transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1); }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 40px 60px; max-width: 1400px; margin: 0 auto;
         }
 
-        .overlay-module-paragraph {
-            color: var(--text-muted-mid);
-            font-size: 0.8rem;
-            max-width: 90%;
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        .brand-wrapper { display: flex; align-items: center; gap: 15px; position: relative; cursor: pointer; }
+        
+        .glitch-logo { 
+            font-size: 2.2rem; letter-spacing: 2px; text-transform: uppercase; font-weight: 900;
+            position: relative; color: #fff;
+            animation: glitch-skew 4s infinite linear alternate-reverse;
+        }
+        .glitch-logo span { color: var(--neon); }
+        
+        .glitch-logo::before, .glitch-logo::after {
+            content: 'THEABDOINC';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+        }
+        .glitch-logo::before {
+            left: 2px; text-shadow: -2px 0 var(--neon-magenta);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        .glitch-logo::after {
+            left: -2px; text-shadow: -2px 0 var(--neon), 0 2px var(--neon-magenta);
+            clip: rect(85px, 450px, 140px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
         }
 
-        .module-operation-hud-indicators {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            display: flex;
-            gap: 8px;
-            z-index: 6;
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.3deg); }
+            5% { clip: rect(112px, 9999px, 76px, 0); transform: skew(0.1deg); }
+            10% { clip: rect(85px, 9999px, 5px, 0); transform: skew(-0.2deg); }
+            15% { clip: rect(27px, 9999px, 115px, 0); transform: skew(0.4deg); }
+            20% { clip: rect(51px, 9999px, 32px, 0); transform: skew(-0.3deg); }
+            25% { clip: rect(95px, 9999px, 140px, 0); transform: skew(0.1deg); }
+            30% { clip: rect(10px, 9999px, 45px, 0); transform: skew(0.5deg); }
+            35% { clip: rect(64px, 9999px, 88px, 0); transform: skew(-0.1deg); }
+            40% { clip: rect(120px, 9999px, 10px, 0); transform: skew(0.2deg); }
+            45% { clip: rect(3px, 9999px, 55px, 0); transform: skew(-0.4deg); }
+            50% { clip: rect(80px, 9999px, 125px, 0); transform: skew(0.1deg); }
+            100% { clip: rect(67px, 9999px, 43px, 0); transform: skew(0deg); }
+        }
+        @keyframes glitch-anim2 {
+            0% { clip: rect(76px, 9999px, 116px, 0); transform: skew(-0.1deg); }
+            5% { clip: rect(22px, 9999px, 45px, 0); transform: skew(0.3deg); }
+            10% { clip: rect(135px, 9999px, 85px, 0); transform: skew(-0.3deg); }
+            15% { clip: rect(9px, 9999px, 130px, 0); transform: skew(0.2deg); }
+            20% { clip: rect(55px, 9999px, 62px, 0); transform: skew(0.4deg); }
+            25% { clip: rect(110px, 9999px, 15px, 0); transform: skew(-0.2deg); }
+            100% { clip: rect(40px, 9999px, 90px, 0); transform: skew(0deg); }
+        }
+        @keyframes glitch-skew {
+            0% { transform: skew(1deg); }
+            10% { transform: skew(-1deg); }
+            20% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
         }
 
-        .operation-badge-node {
-            background-color: rgba(1, 1, 2, 0.8);
-            border: 1px solid var(--border-ultra-thin);
-            padding: 6px 12px;
-            font-family: 'Space Mono', monospace;
-            font-size: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            backdrop-filter: blur(5px);
+        .final-logo {
+            width: 50px; height: 50px;
+            filter: drop-shadow(0 0 10px rgba(0, 242, 255, 0.3));
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+        .brand-wrapper:hover .final-logo { transform: rotate(20deg) scale(1.15); filter: drop-shadow(0 0 15px var(--neon)); }
 
-        .operation-badge-node.active-pipeline-streaming::before {
-            content: '';
-            display: inline-block;
-            width: 5px;
-            height: 5px;
-            background-color: var(--text-terminal-green);
-            border-radius: 50%;
-            margin-right: 6px;
-        }
+        .dev-tag { color: #555; font-family: monospace; font-size: 0.9rem; letter-spacing: 2px; }
 
-        .mainframe-pipeline-attachment-dock {
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.01);
-            border: 1px solid var(--border-ultra-thin);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: -10px;
-        }
-
-        @media (min-width: 768px) {
-            .mainframe-pipeline-attachment-dock {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                padding: 24px 40px;
-                margin-top: -20px;
-            }
-        }
-
-        .mainframe-pipeline-attachment-dock span {
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            color: var(--text-muted-mid);
-            line-height: 1.4;
-        }
-
-        .pipeline-download-trigger-btn {
-            color: var(--text-absolute-white);
-            text-decoration: none;
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            background-color: var(--accent-master-blue);
-            padding: 12px 24px;
-            text-align: center;
-        }
-
-        .bento-showcase-module-card.state-hidden-node,
-        div[data-category].state-hidden-node {
-            display: none !important;
-        }
-
-        /* ---------------------------------------------------------------------
-           08. INTERACTIVE NUMERICAL TELEMETRY
-           --------------------------------------------------------------------- */
-        .telemetry-numerical-counter-panel {
-            margin-top: 80px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        @media (min-width: 768px) {
-            .telemetry-numerical-counter-panel {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 30px;
-                margin-top: 120px;
-            }
-        }
-
-        .statistical-counter-cell {
-            background-color: var(--bg-card-baseline);
-            border: 1px solid var(--border-ultra-thin);
-            padding: 24px;
-        }
-
-        .statistical-counter-cell h4 {
-            font-family: 'Space Mono', monospace;
-            font-size: clamp(1.8rem, 5vw, 2.8rem);
-            font-weight: 700;
-            color: var(--text-absolute-white);
-            margin-bottom: 4px;
-        }
-
-        .statistical-counter-cell p {
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted-mid);
-        }
-
-        /* ---------------------------------------------------------------------
-           09. TECHNICAL PIPELINE ARCHITECTURE
-           --------------------------------------------------------------------- */
-        .technical-pipeline-architecture-section {
-            margin-top: 100px;
-        }
-
-        .pipeline-tri-grid-mainframe {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-        }
-
-        @media (min-width: 992px) {
-            .pipeline-tri-grid-mainframe {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 40px;
-            }
-        }
-
-        .architecture-node-card-block {
-            border-left: 1px solid var(--border-active-glow);
-            padding-left: 20px;
-        }
-
-        .architecture-node-card-block .node-serial-hash {
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            color: var(--text-dark-subtle);
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .architecture-node-card-block h3 {
-            font-size: 1.2rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-bottom: 12px;
-        }
-
-        .architecture-node-card-block p {
-            color: var(--text-muted-mid);
-            font-size: 0.85rem;
-            line-height: 1.6;
-            font-weight: 300;
-        }
-
-        /* ---------------------------------------------------------------------
-           10. CREATIVE SYNDICATE DIRECTORY
-           --------------------------------------------------------------------- */
-        .syndicate-network-directory-section {
-            margin-top: 100px;
-        }
-
-        .syndicate-manifest-list {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .syndicate-interactive-row {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 30px 0;
-            border-bottom: 1px solid var(--border-ultra-thin);
-            text-decoration: none;
-            color: var(--text-absolute-white);
-        }
-
-        @media (min-width: 768px) {
-            .syndicate-interactive-row {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                padding: 40px 0;
-            }
-        }
-
-        .syndicate-interactive-row .left-identity-alignment {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .syndicate-interactive-row .network-node-index {
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
-            color: var(--text-dark-subtle);
-        }
-
-        .syndicate-interactive-row .network-node-alias {
-            font-size: clamp(1.4rem, 4vw, 2rem);
-            font-weight: 600;
-            letter-spacing: -0.5px;
-        }
-
-        .syndicate-interactive-row .network-functional-badge {
-            font-family: 'Space Mono', monospace;
-            font-size: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent-cyber-cyan);
-            border: 1px solid rgba(0, 240, 255, 0.15);
-            padding: 4px 12px;
-        }
-
-        /* ---------------------------------------------------------------------
-           11. CINEMA THEATER LIGHTBOX SATELLITE
-           --------------------------------------------------------------------- */
-        #cinema-theater-lightbox-system {
-            position: fixed;
-            inset: 0;
-            background-color: var(--bg-pure-black);
-            z-index: var(--z-index-lightbox);
-            opacity: 0;
-            pointer-events: none;
-            will-change: opacity;
-            transition: opacity 0.5s var(--ease-elite-expo);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #cinema-theater-lightbox-system.state-theater-active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .theater-cinematic-screen-container {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background-color: #000;
+        .hero-section { 
+            text-align: center; 
+            margin: 60px 0; 
             position: relative;
-        }
-
-        .theater-cinematic-screen-container video {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .theater-system-close-trigger {
-            position: absolute;
-            top: -40px;
-            right: 16px;
-            background: none;
-            border: none;
-            color: var(--text-muted-mid);
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .theater-scrubber-track-rail {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .theater-scrubber-progress-fluid-line {
-            height: 100%;
-            width: 0%;
-            background-color: var(--accent-master-blue);
-        }
-
-        /* ---------------------------------------------------------------------
-           12. TERMINAL METADATA STUDIO FOOTER
-           --------------------------------------------------------------------- */
-        footer.studio-mainframe-terminal-footer {
-            margin-top: 120px;
-            padding: 60px 0 30px 0;
-            border-top: 1px solid var(--border-ultra-thin);
             display: flex;
             flex-direction: column;
-            gap: 24px;
-        }
-
-        .footer-system-manifest-hash {
-            font-family: 'Space Mono', monospace;
-            font-size: 8px;
-            color: var(--text-dark-subtle);
-            line-height: 1.5;
-        }
-
-        .footer-connection-telemetry-status {
-            display: flex;
             align-items: center;
-            gap: 10px;
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
+        }
+        .hero-section h2 { 
+            font-size: 3.8rem; 
+            letter-spacing: 5px; 
+            text-transform: uppercase; 
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 25px rgba(0, 242, 255, 0.15);
+        }
+        .hero-section p { 
+            color: var(--neon); 
+            font-size: 1rem; 
+            font-family: monospace; 
+            letter-spacing: 3px;
             text-transform: uppercase;
-            color: var(--text-terminal-green);
+            margin-top: 8px;
+            opacity: 0.8;
         }
 
-        .footer-connection-telemetry-status::before {
-            content: '';
+        .showcase-status {
+            display: flex;
+            gap: 25px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #444;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 6px 20px;
+        }
+        .status-node { display: flex; align-items: center; gap: 6px; }
+        .status-node span { color: #888; }
+        .pulse-dot {
+            width: 6px; height: 6px; background: var(--neon); border-radius: 50%;
+            animation: pulse-glow 1.5s infinite ease-in-out;
+        }
+        @keyframes pulse-glow { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; box-shadow: 0 0 8px var(--neon); } }
+.grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:30px;
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 20px;
+}
+
+@media (max-width:768px){
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+
+}
+        .card {
+            background: var(--card-bg); 
+            border: 1px solid rgba(255, 255, 255, 0.03); border-radius: 20px;
+            padding: 14px; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
             display: block;
-            width: 6px;
-            height: 6px;
-            background-color: var(--text-terminal-green);
-            border-radius: 50%;
-            animation: pulseAlpha 1.5s infinite ease-in-out;
+        }
+        .card:hover { 
+            border-color: rgba(0, 242, 255, 0.4); transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 242, 255, 0.05);
+        }
+        .video-wrapper {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #000;
+    position: relative;
+}
+
+        .video-wrapper { width: 100%; height: 240px; overflow: hidden; border-radius: 14px; background: #000; position: relative; }
+
+        .card:hover video { filter: brightness(1) saturate(1.1); transform: scale(1.04); }
+
+        video:fullscreen { filter: brightness(1) !important; object-fit: contain !important; background: #000 !important; }
+
+        .info { padding: 20px 8px 10px 8px; display: flex; justify-content: space-between; align-items: center; }
+        .info h3 { font-size: 1.15rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .tech-badge { font-family: monospace; color: var(--neon); font-size: 0.75rem; border: 1px solid rgba(0, 242, 255, 0.15); padding: 5px 12px; border-radius: 20px; }
+        
+        footer { 
+            text-align: center; padding: 120px 0 40px 0; 
+            font-family: monospace; display: flex; flex-direction: column; align-items: center; gap: 20px;
         }
 
-        @media (max-width: 767px) {
-            .bento-grid-exhibition-mainframe {
-                gap: 20px;
-            }
-            .mainframe-pipeline-attachment-dock {
-                margin-top: -5px;
-                padding: 15px;
-            }
+        .btn-container { display: flex; gap: 15px; justify-content: center; align-items: center; flex-wrap: wrap; }
+
+        .footer-btn {
+            background: rgba(0, 242, 255, 0.05); color: var(--neon);
+            border: 1px solid rgba(0, 242, 255, 0.3); padding: 10px 24px;
+            font-family: monospace; font-size: 0.9rem; font-weight: bold;
+            border-radius: 30px; cursor: pointer; transition: all 0.4s ease;
+            letter-spacing: 2px; text-transform: uppercase; text-decoration: none;
+            display: inline-block;
+        }
+        .footer-btn:hover {
+            background: var(--neon); color: #000;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); transform: translateY(-2px);
         }
 
-        @keyframes pulseAlpha {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
+        .copyright { color: #444; font-size: 0.85rem; letter-spacing: 1px; margin-top: 10px; }
+
+        /* MODAL SİSTEMLERİ */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
+            z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+            display: flex; justify-content: center; align-items: center;
         }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal-box {
+            background: #09090d; border: 1px solid rgba(0, 242, 255, 0.2);
+            padding: 40px; max-width: 600px; width: 90%; border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 242, 255, 0.1);
+            position: relative; transform: scale(0.8); transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .modal-box { transform: scale(1); }
+
+        .modal-box h4 { font-size: 1.8rem; color: var(--neon); margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; }
+        .modal-box .sub-title { font-family: monospace; color: #555; margin-bottom: 20px; font-size: 0.9rem; }
+        .modal-box p { color: #ccc; line-height: 1.7; font-size: 1.05rem; text-align: justify; }
+        
+        .close-btn {
+            position: absolute; top: 20px; right: 25px;
+            background: none; border: none; color: #555;
+            font-size: 1.8rem; cursor: pointer; transition: color 0.3s;
+        }
+        .close-btn:hover { color: var(--neon); }
+
+        .social-matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px; }
+      @media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+        .social-node {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px; border-radius: 12px; text-decoration: none; color: #fff;
+            display: flex; flex-direction: column; align-items: flex-start; gap: 4px; transition: all 0.3s ease;
+        }
+        .social-node:hover { border-color: var(--neon); background: rgba(0, 242, 255, 0.03); transform: translateY(-3px); }
+        .social-node .username { font-weight: bold; font-size: 0.95rem; color: #fff; font-family: monospace; transition: color 0.3s ease; }
+        .social-node:hover .username { color: var(--neon); }
+        .social-node .tag { font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 1px; font-family: monospace; }
     </style>
 </head>
 <body>
 
-    <canvas id="quantum-noise-fluid-canvas"></canvas>
+    <canvas id="bg-canvas"></canvas>
 
-    <!-- ULTRA-FIDELITY MATRIX FULLSCREEN MENU -->
-    <div id="matrix-fullscreen-navigation-menu" role="dialog" aria-modal="true">
-        <button class="menu-system-close-node-btn" id="global-menu-close-trigger-btn">[ Close X ]</button>
-        <div class="menu-mainframe-content-injector">
-            <div class="menu-telemetry-header-label">// BROADCAST PIPELINE INDEX // CLICK TO STREAM</div>
-            <div class="menu-video-pipeline-stream-list">
-                
-                <!-- MENU ROW 01 -->
-                <div class="menu-video-interactive-row-item" data-menu-stream-target="zblock.mp4">
-                    <div class="menu-row-meta-left-block">
-                        <span class="row-hash-index">01//</span>
-                        <h3 class="row-core-title">ZBLOCK CRUSH</h3>
-                    </div>
-                    <div class="menu-row-meta-right-block">
-                        <span class="row-hud-badge">GAME LOOP</span>
-                    </div>
-                </div>
+    <div id="loader">
+        <div class="terminal-text" id="terminal">
+            <p>> THEABDOINC_CORE.exe loaded...</p>
+            <p>> Connecting to 3D graphics engine... Done.</p>
+            <p>> Injecting cyber-grid neural nodes...</p>
+            <p>> System ready. CLICK ANYWHERE TO EXECUTE... <span class="blink">_</span></p>
+        </div>
+        <img src="theabdoinclogo.png" id="center-logo" class="intro-logo" alt="Logo">
+        <div class="click-prompt" id="prompt-txt">Interactive Audio Interface Active</div>
+    </div>
 
-                <!-- MENU ROW 02 -->
-                <div class="menu-video-interactive-row-item" data-menu-stream-target="1.mp4">
-                    <div class="menu-row-meta-left-block">
-                        <span class="row-hash-index">02//</span>
-                        <h3 class="row-core-title">BMW MOTION STUDIO</h3>
-                    </div>
-                    <div class="menu-row-meta-right-block">
-                        <span class="row-hud-badge">CGI BLENDER</span>
-                    </div>
-                </div>
-
-                <!-- MENU ROW 03 -->
-                <div class="menu-video-interactive-row-item" data-menu-stream-target="4.mp4">
-                    <div class="menu-row-meta-left-block">
-                        <span class="row-hash-index">03//</span>
-                        <h3 class="row-core-title">ATMOSPHERIC VOID</h3>
-                    </div>
-                    <div class="menu-row-meta-right-block">
-                        <span class="row-hud-badge">CINEMATIC</span>
-                    </div>
-                </div>
-
-                <!-- NEW MENU ROW 04: best -->
-                <div class="menu-video-interactive-row-item" data-menu-stream-target="best94.mp4">
-                    <div class="menu-row-meta-left-block">
-                        <span class="row-hash-index">04//</span>
-                        <h3 class="row-core-title">Photorealistic / Realistic</h3>
-                    </div>
-                    <div class="menu-row-meta-right-block">
-                        <span class="row-hud-badge">CREATIVE</span>
-                    </div>
-                </div>
-
-                <!-- NEW MENU ROW 05: FINAŞ -->
-                <div class="menu-video-interactive-row-item" data-menu-stream-target="finaş.mp4">
-                    <div class="menu-row-meta-left-block">
-                        <span class="row-hash-index">05//</span>
-                        <h3 class="row-core-title">Chiaroscuro</h3>
-                    </div>
-                    <div class="menu-row-meta-right-block">
-                        <span class="row-hud-badge">MOTION DESIGN</span>
-                    </div>
-                </div>
-
-                <!-- NEW MENU ROW 06: COMP1_5 -->
-                <div class="menu-video-interactive-row-item" data-menu-stream-target="comp1_5.mp4">
-                    <div class="menu-row-meta-left-block">
-                        <span class="row-hash-index">06//</span>
-                        <h3 class="row-core-title">Gaming Concept / Interactive</h3>
-                    </div>
-                    <div class="menu-row-meta-right-block">
-                        <span class="row-hud-badge">FX POST</span>
-                    </div>
-                </div>
-
+    <div id="main-content">
+        <nav>
+            <div class="brand-wrapper" onclick="window.location.reload();">
+                <img src="theabdoinclogo.png" class="final-logo" alt="Logo">
+                <h1 class="glitch-logo" data-text="THEABDOINC">THEABDO<span>INC</span></h1>
             </div>
+            <span class="dev-tag">&lt; INDIE GAME DEVELOPER /&gt;</span>
+        </nav>
+
+        <section class="hero-section">
+            <h2>ARCHIVE // DATABASE</h2>
+            <p>// Core Repositories & Visual Nodes</p>
+            
+            <div class="showcase-status">
+                <div class="status-node"><div class="pulse-dot"></div> CORE_STATUS: <span>ACTIVE</span></div>
+                <div class="status-node">FRAME_RATE: <span>90 FPS</span></div>
+            </div>
+        </section>
+        <div class="grid">
+
+ <div class="card" id="alpha-card">
+    <div class="video-wrapper">
+        <video id="main-video"
+               src="zblock.mp4"
+               controls
+               preload="metadata"
+               playsinline>
+        </video>
+    </div>
+
+    <div class="info">
+        <h3>Z Block Crush</h3>
+        <span class="tech-badge">C# / UNITY</span>
+    </div>
+</div>
+  
+
+            <!-- Yeni Sayfaya Yönlendiren Kart (projects.html sayfasına gider) -->
+            <a href="projects.html" class="card" id="open-gallery-card">
+                <div class="video-wrapper">
+                    <img src="hyper.jpg" alt="Project Image" id="category-video" playsinline>
+                </div>
+                <div class="info">
+                    <h3>My all project category</h3>
+                    <span class="tech-badge">BLENDER / CYCLES RENDER</span>
+                </div>
+            </a>
+        </div>
+        </div>
+
+        <footer>
+            <div class="btn-container">
+                <button class="footer-btn" id="open-about">About Me</button>
+                <button class="footer-btn" id="open-social">Social Media</button>
+                <a href="https://wa.me/905317306947?text=Hello%2C%20I%20would%20like%20to%20get%20information%20about%20your%20project%20availability.%20What%20is%20the%20average%20price%20for%20a%203D%20cinematic%20or%20mobile%20game%20development%20project%3F" target="_blank" class="footer-btn" id="contact-link">Contact</a>
+            </div>
+            <div class="copyright">© 2026 THEABDOINC. All Rights Reserved.</div>
+        </footer>
+    </div>
+
+    <!-- Modallar -->
+    <div class="modal-overlay" id="about-modal">
+        <div class="modal-box">
+            <button class="close-btn" id="close-about">&times;</button>
+            <h4>3D Artist & Game Developer</h4>
+            <div class="sub-title">// SYSTEM BIOGRAPHY</div>
+            <p>I am a 3D artist and game developer working at the intersection of digital art and software engineering. Utilizing Blender and the Cycles render engine, I specialize in creating photorealistic automotive cinematics and animations. On the development side, I build mobile games using Unity and C# (including my recent strategy title, Z Block Crush). As the founder of TheAbdoInc agency, I provide web design and 3D modeling solutions for brands while constantly pushing the limits of modern PC hardware and real-time rendering.</p>
         </div>
     </div>
 
-    <div class="production-master-shield">
-
-        <!-- SEMANTIC HEADER -->
-        <header class="studio-masthead-engine">
-            <div class="masthead-identity-block">
-                <div class="identity-geometry-logo"></div>
-                <div class="identity-text-nodes">
-                    <h1>THEABDOINC</h1>
-                    <span>ENTERPRISE MOBILE CORE v5.5</span>
-                </div>
-            </div>
-            <button class="masthead-action-trigger" id="global-menu-open-trigger-btn">[ INDEX MENU ]</button>
-        </header>
-
-        <!-- MAIN SEMANTIC CONTAINER -->
-        <main class="cinematic-hero-stage-engine">
-            <div class="stage-meta-diagnostic-tag">OPERATIONAL PARADIGM // HIGH FIDELITY</div>
-            <h2 class="stage-title-display" id="main-hero-trigger-title">
-                Realtime Systems<br>
-                <span class="hollow-structural-text" data-text="& Creative Directive">& Creative Directive</span>
-            </h2>
-            <p class="stage-parametric-description">
-                Mobil donanım hızlandırmalı mimari. Saniyede sıfır gecikmeli arayüz döngüleri, akışkan etkileşim katsayıları ve ödüllü dijital mühendislik standartları.
-            </p>
-        </main>
-
-        <div class="showcase-matrix-wrapper-panel">
-
-            <!-- PORTFOLIO SECTION -->
-            <section id="showcase">
-                <div class="matrix-section-header">
-                    <div class="matrix-title-block">
-                        <span>01 // PRODUCTION SYSTEM SHIELD</span>
-                        <h2>Selected Systems</h2>
-                    </div>
-                    <nav class="matrix-filter-dock-station" aria-label="Ecosystem Filter">
-                        <button class="filter-node-trigger active-matrix-node" data-filter-category="all">All Ecosystems</button>
-                        <button class="filter-node-trigger" data-filter-category="games">Game Projects</button>
-                        <button class="filter-node-trigger" data-filter-category="automotive">Automotive CGI</button>
-                        <button class="filter-node-trigger" data-filter-category="vfx">VFX & Visuals</button>
-                    </nav>
-                </div>
-
-                <div class="bento-grid-exhibition-mainframe">
-                    
-                    <!-- WORK CORE UNIT 01 -->
-                    <article class="bento-showcase-module-card bento-span-12 ratio-cinematic" data-category="games" data-video-source-url="zblock.mp4">
-                        <div class="module-operation-hud-indicators">
-                            <div class="operation-badge-node active-pipeline-streaming">MOBILE READY</div>
-                        </div>
-                        <div class="bento-media-viewport-shield">
-                            <video autoplay muted loop playsinline preload="metadata">
-                                <source src="zblock.mp4" type="video/mp4">
-                            </video>
-                        </div>
-                        <div class="custom-graphics-overlay-layer">
-                            <span class="overlay-classification-serial">[ NODE_01 ] MODULE</span>
-                            <h3 class="overlay-module-title">ZBLOCK CRUSH</h3>
-                            <p class="overlay-module-paragraph">Yeni nesil mobil oyun mekaniği mimarisi. İşlemci yükü optimize edilmiş temiz arabirim döngüleri.</p>
-                        </div>
-                    </article>
-                    <div class="bento-span-12" data-category="games">
-                        <div class="mainframe-pipeline-attachment-dock">
-                            <span>Integrity Control: Alpha_Stable_v1.02 // Build Success</span>
-                            <a href="#" class="pipeline-download-trigger-btn">Compile Code</a>
-                        </div>
-                    </div>
-
-                    <!-- WORK CORE UNIT 02 -->
-                    <article class="bento-showcase-module-card bento-span-8 ratio-landscape" data-category="automotive" data-video-source-url="1.mp4">
-                        <div class="module-operation-hud-indicators">
-                            <div class="operation-badge-node active-pipeline-streaming">CGI PIPELINE</div>
-                        </div>
-                        <div class="bento-media-viewport-shield">
-                            <video autoplay muted loop playsinline preload="metadata">
-                                <source src="1.mp4" type="video/mp4">
-                            </video>
-                        </div>
-                        <div class="custom-graphics-overlay-layer">
-                            <span class="overlay-classification-serial">[ NODE_02 ] PIPELINE</span>
-                            <h3 class="overlay-module-title">BMW Motion Studio</h3>
-                            <p class="overlay-module-paragraph">Fotogerçekçi uzamsal tasarımlar ve Blender Cycles entegrasyonu.</p>
-                        </div>
-                    </article>
-
-                    <!-- WORK CORE UNIT 03 -->
-                    <article class="bento-showcase-module-card bento-span-4 ratio-vertical" data-category="automotive" data-video-source-url="4.mp4">
-                        <div class="bento-media-viewport-shield">
-                            <video autoplay muted loop playsinline preload="metadata">
-                                <source src="4.mp4" type="video/mp4">
-                            </video>
-                        </div>
-                        <div class="custom-graphics-overlay-layer">
-                            <span class="overlay-classification-serial">[ NODE_03 ] METRICS</span>
-                            <h3 class="overlay-module-title">Atmospheric Void</h3>
-                        </div>
-                    </article>
-
-                    <!-- NEW WORK CORE UNIT 04: best -->
-                    <article class="bento-showcase-module-card bento-span-6 ratio-landscape" data-category="vfx" data-video-source-url="Photorealistic / Realistic">
-                        <div class="bento-media-viewport-shield">
-                            <video autoplay muted loop playsinline preload="metadata">
-                                <source src="best94.mp4" type="video/mp4">
-                            </video>
-                        </div>
-                        <div class="custom-graphics-overlay-layer">
-                            <span class="overlay-classification-serial">[ NODE_04 ] CINEMATIC</span>
-                            <h3 class="overlay-module-title">Photorealistic / Realistic</h3>
-                            <p class="overlay-module-paragraph">Kreatif vizyon elementleri ve dinamik kompozisyon kurgusu.</p>
-                        </div>
-                    </article>
-
-                    <!-- NEW WORK CORE UNIT 05: FINAŞ -->
-                    <article class="bento-showcase-module-card bento-span-6 ratio-landscape" data-category="vfx" data-video-source-url="Chiaroscuro">
-                        <div class="bento-media-viewport-shield">
-                            <video autoplay muted loop playsinline preload="metadata">
-                                <source src="finaş.mp4" type="video/mp4">
-                            </video>
-                        </div>
-                        <div class="custom-graphics-overlay-layer">
-                            <span class="overlay-classification-serial">[ NODE_05 ] CORE_RENDER</span>
-                            <h3 class="overlay-module-title">Chiaroscuro</h3>
-                            <p class="overlay-module-paragraph">İleri düzey simülasyon çıktıları ve soyut geometri render mimarisi.</p>
-                        </div>
-                    </article>
-
-                    <!-- NEW WORK CORE UNIT 06: COMP1_5 -->
-                    <article class="bento-showcase-module-card bento-span-12 ratio-cinematic" data-category="vfx" data-video-source-url="Gaming Concept / Interactive">
-                        <div class="bento-media-viewport-shield">
-                            <video autoplay muted loop playsinline preload="metadata">
-                                <source src="Comp 1_5.mp4" type="video/mp4">
-                            </video>
-                        </div>
-                        <div class="custom-graphics-overlay-layer">
-                            <span class="overlay-classification-serial">[ NODE_06 ] ADVANCED_VFX</span>
-                            <h3 class="overlay-module-title">Gaming Concept / Interactive</h3>
-                            <p class="overlay-module-paragraph">Süper-keskin pikseller ve yüksek bit-derinlikli dijital kompozit katmanları.</p>
-                        </div>
-                    </article>
-
-                </div>
-
-                <!-- TELEMETRY SYSTEM -->
-                <div class="telemetry-numerical-counter-panel">
-                    <div class="statistical-counter-cell">
-                        <h4 data-target-metric-limit="2400">0</h4>
-                        <p>Render Hours</p>
-                    </div>
-                    <div class="statistical-counter-cell">
-                        <h4 data-target-metric-limit="142">0</h4>
-                        <p>Assets Built</p>
-                    </div>
-                    <div class="statistical-counter-cell">
-                        <h4 data-target-metric-limit="89">0</h4>
-                        <p>Shaders Clean</p>
-                    </div>
-                    <div class="statistical-counter-cell">
-                        <h4 data-target-metric-limit="12">0</h4>
-                        <p>Deploy Safe</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CAPABILITIES -->
-            <section id="capabilities" class="technical-pipeline-architecture-section">
-                <div class="matrix-section-header">
-                    <div class="matrix-title-block">
-                        <span>02 // HIGH COMPILING PIPELINE</span>
-                        <h2>Technical Pipeline</h2>
-                    </div>
-                </div>
-                <div class="pipeline-tri-grid-mainframe">
-                    <div class="architecture-node-card-block">
-                        <span class="node-serial-hash">CORE_EXEC_NODE // 01</span>
-                        <h3>Interactive Logic</h3>
-                        <p>Temiz, optimize edilmiş betik yapılandırmaları. Mobil işlemcilerin dar boğaz yaşamasını engelleyecek hafif nesne veri yönetim yapıları.</p>
-                    </div>
-                    <div class="architecture-node-card-block">
-                        <span class="node-serial-hash">CORE_EXEC_NODE // 02</span>
-                        <h3>Automotive Realism</h3>
-                        <p>Yüksek çözünürlüklü yüzey doğruluğu ve malzeme kalibrasyonları. Gerçekçi ışık kırılım parametrelerinin matematiksel optimizasyonu.</p>
-                    </div>
-                    <div class="architecture-node-card-block">
-                        <span class="node-serial-hash">CORE_EXEC_NODE // 03</span>
-                        <h3>Cinematic Continuum</h3>
-                        <p>Gelişmiş kurgu zamanlaması, çok eksenli lens takip modifikasyonları ve kayıpsız pürüzsüz gerçek zamanlı çıktı akışı.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CREATIVE SYNDICATE DIRECTORY -->
-            <section id="syndicate" class="syndicate-network-directory-section">
-                <div class="matrix-section-header">
-                    <div class="matrix-title-block">
-                        <span>03 // DISTRIBUTED ALLIANCE ALLOCATION</span>
-                        <h2>Creative Syndicate</h2>
-                    </div>
-                </div>
-                <div class="syndicate-manifest-list">
-                    <a href="https://instagram.com/vx.kingdom" target="_blank" class="syndicate-interactive-row">
-                        <div class="left-identity-alignment">
-                            <span class="network-node-index">[01]</span>
-                            <span class="network-node-alias">vx.kingdom</span>
-                        </div>
-                        <span class="network-functional-badge">Environment Architect</span>
-                    </a>
-                    <a href="https://instagram.com/fvdga" target="_blank" class="syndicate-interactive-row">
-                        <div class="left-identity-alignment">
-                            <span class="network-node-index">[02]</span>
-                            <span class="network-node-alias">fvdga</span>
-                        </div>
-                        <span class="network-functional-badge">Technical FX Compositor</span>
-                    </a>
-                </div>
-            </section>
-
-            <!-- FOOTER -->
-            <footer class="studio-mainframe-terminal-footer">
-                <div class="footer-system-manifest-hash">
-                    // RUNTIME CONTEXT SAFE ENG_2026. HARDWARE ACCELERATION STABLE. ENVIRONMENT OPTIMIZATION COMPLETED SUCCESSFULLY.
-                </div>
-                <div class="footer-connection-telemetry-status">
-                    Mainframe Transmitting Secure Packets
-                </div>
-            </footer>
-
-        </div>
-    </div>
-
-    <!-- VIDEO LIGHTBOX OVERLAY -->
-    <div id="cinema-theater-lightbox-system" role="dialog" aria-modal="true">
-        <div class="theater-cinematic-screen-container">
-            <button class="theater-system-close-trigger" id="theater-close-trigger-node">CLOSE SESSION [X]</button>
-            <video id="theater-mainframe-video-element" loop playsinline controls></video>
-            <div class="theater-scrubber-track-rail">
-                <div class="theater-scrubber-progress-fluid-line" id="theater-scrubber-fluid-progress-fill"></div>
+    <div class="modal-overlay" id="social-modal">
+        <div class="modal-box">
+            <button class="close-btn" id="close-social">&times;</button>
+            <h4>Network Ecosystem</h4>
+            <div class="sub-title">// INSTAGRAM DIRECTORIES</div>
+            <div class="social-matrix">
+                <a href="https://www.instagram.com/theabdoinc.ar/" target="_blank" class="social-node">
+                    <span class="username">@theabdoinc.ar</span>
+                    <span class="tag">// Active Profile</span>
+                </a>
+                <a href="https://www.instagram.com/fvdga/" target="_blank" class="social-node">
+                    <span class="username">@fvdga</span>
+                    <span class="tag">// Gaming / Content Creator</span>
+                </a>
+                <a href="https://www.instagram.com/vx.kingdom/" target="_blank" class="social-node">
+                    <span class="username">@vx.kingdom</span>
+                    <span class="tag">// 3D Animation</span>
+                </a>
+                <a href="https://www.instagram.com/theabdoincagency/" target="_blank" class="social-node">
+                    <span class="username">@theabdoincagency</span>
+                    <span class="tag">// Inc. Agency</span>
+                </a>
             </div>
         </div>
     </div>
 
     <script>
-        const triggerSystemHapticFeedback = (durationInMs = 12) => {
-            if ('vibrate' in navigator) navigator.vibrate(durationInMs);
-        };
+        // Ses Motoru
+        let audioCtx = null;
+        function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
-        const globalMenuOpenBtn = document.getElementById('global-menu-open-trigger-btn');
-        const globalMenuCloseBtn = document.getElementById('global-menu-close-trigger-btn');
-        const fullscreenMenuOverlay = document.getElementById('matrix-fullscreen-navigation-menu');
-        const menuInteractiveRows = document.querySelectorAll('.menu-video-interactive-row-item');
-
-        const lightboxMainModalPanel = document.getElementById('cinema-theater-lightbox-system');
-        const lightboxNativeVideoTag = document.getElementById('theater-mainframe-video-element');
-        const lightboxCloseTriggerBtn = document.getElementById('theater-close-trigger-node');
-        const lightboxScrubberFillLine = document.getElementById('theater-scrubber-fluid-progress-fill');
-
-        globalMenuOpenBtn.addEventListener('click', () => {
-            triggerSystemHapticFeedback(20);
-            fullscreenMenuOverlay.classList.add('state-menu-active');
-        });
-
-        const closeFullscreenMatrixMenu = () => {
-            triggerSystemHapticFeedback(10);
-            fullscreenMenuOverlay.classList.remove('state-menu-active');
-        };
-        globalMenuCloseBtn.addEventListener('click', closeFullscreenMatrixMenu);
-
-        menuInteractiveRows.forEach(rowItem => {
-            rowItem.addEventListener('click', () => {
-                const targetedVideoUrl = rowItem.getAttribute('data-menu-stream-target');
-                if (targetedVideoUrl) {
-                    closeFullscreenMatrixMenu();
-                    setTimeout(() => {
-                        triggerSystemHapticFeedback(25);
-                        lightboxNativeVideoTag.src = targetedVideoUrl;
-                        lightboxMainModalPanel.classList.add('state-theater-active');
-                        
-                        const playResultPromise = lightboxNativeVideoTag.play();
-                        if (playResultPromise !== undefined) {
-                            playResultPromise.catch(() => console.log("Stream managed."));
-                        }
-                    }, 300);
-                }
-            });
-        });
-
-        const observerConfigSettings = { root: null, threshold: 0.15, rootMargin: "0px 0px -5% 0px" };
-
-        const globalPerformanceObserverEngine = new IntersectionObserver((detectedEntries) => {
-            requestAnimationFrame(() => {
-                detectedEntries.forEach(viewEntry => {
-                    if (viewEntry.isIntersecting) {
-                        viewEntry.target.classList.add('viewport-visible');
-                        if(viewEntry.target.id === 'main-hero-trigger-title') {
-                            viewEntry.target.classList.add('reveal-active');
-                        }
-                    }
-                });
-            });
-        }, observerConfigSettings);
-
-        const masterTitleDisplayNode = document.getElementById('main-hero-trigger-title');
-        if(masterTitleDisplayNode) globalPerformanceObserverEngine.observe(masterTitleDisplayNode);
-
-        const targetBentoCardsArray = document.querySelectorAll('.bento-showcase-module-card');
-        targetBentoCardsArray.forEach(card => globalPerformanceObserverEngine.observe(card));
-
-        targetBentoCardsArray.forEach(clickableMediaCard => {
-            clickableMediaCard.addEventListener('click', () => {
-                triggerSystemHapticFeedback(15);
-                const embeddedVideoSourceUrl = clickableMediaCard.getAttribute('data-video-source-url');
-                if (embeddedVideoSourceUrl) {
-                    lightboxNativeVideoTag.src = embeddedVideoSourceUrl;
-                    lightboxMainModalPanel.classList.add('state-theater-active');
-                    const videoPlayPromise = lightboxNativeVideoTag.play();
-                    if (videoPlayPromise !== undefined) {
-                        videoPlayPromise.catch(() => console.log("Core buffer bypass saved."));
-                    }
-                }
-            });
-        });
-
-        function clearAndCloseMobileVideoPipeline() {
-            triggerSystemHapticFeedback(6);
-            lightboxMainModalPanel.classList.remove('state-theater-active');
-            lightboxNativeVideoTag.pause();
-            lightboxNativeVideoTag.src = "";
+        function playDataTick(duration, frequency) {
+            if (!audioCtx) return;
+            let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + duration);
         }
-        lightboxCloseTriggerBtn.addEventListener('click', clearAndCloseMobileVideoPipeline);
-        
-        lightboxNativeVideoTag.addEventListener('timeupdate', () => {
-            if (lightboxNativeVideoTag.duration) {
-                const structuralPercentTimeline = (lightboxNativeVideoTag.currentTime / lightboxNativeVideoTag.duration) * 100;
-                requestAnimationFrame(() => {
-                    lightboxScrubberFillLine.style.width = structuralPercentTimeline + '%';
-                });
+
+        function playLogoExplosion() {
+            if (!audioCtx) return;
+            let now = audioCtx.currentTime;
+            let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(40, now + 1.2);
+            gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0.001, now + 1.5);
+            
+            let highOsc = audioCtx.createOscillator(), highGain = audioCtx.createGain();
+            highOsc.type = 'triangle'; highOsc.frequency.setValueAtTime(800, now);
+            highOsc.frequency.exponentialRampToValueAtTime(300, now + 0.5);
+            highGain.gain.setValueAtTime(0.08, now); highGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            highOsc.connect(highGain); highGain.connect(audioCtx.destination);
+            osc.start(); osc.stop(now + 1.5); highOsc.start(); highOsc.stop(now + 0.6);
+        }
+
+        function playHoverSound() {
+            if (!audioCtx) return;
+            let now = audioCtx.currentTime, osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(1200, now);
+            osc.frequency.exponentialRampToValueAtTime(1600, now + 0.05);
+            gain.gain.setValueAtTime(0.015, now); gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(now + 0.05);
+        }
+
+        function playInterfaceOpen() {
+            if (!audioCtx) return;
+            let now = audioCtx.currentTime, osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(300, now);
+            osc.frequency.exponentialRampToValueAtTime(900, now + 0.3);
+            gain.gain.setValueAtTime(0.06, now); gain.gain.linearRampToValueAtTime(0.001, now + 0.3);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(now + 0.3);
+        }
+
+        function playCloseSound() {
+            if (!audioCtx) return;
+            let now = audioCtx.currentTime, oscNode = audioCtx.createOscillator(), gain = audioCtx.createGain();
+            oscNode.type = 'sine'; oscNode.frequency.setValueAtTime(400, now); oscNode.frequency.setValueAtTime(250, now + 0.08);
+            gain.gain.setValueAtTime(0.04, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+            oscNode.connect(gain); gain.connect(audioCtx.destination);
+            oscNode.start(); oscNode.stop(now + 0.2);
+        }
+
+        // Arka Plan Canvas
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let nodes = []; const mouse = { x: null, y: null, radius: 200 };
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
+
+        class Node {
+            constructor() {
+                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.6; this.vy = (Math.random() - 0.5) * 0.6;
+                this.radius = Math.random() * 2 + 1;
             }
-        });
-
-        const mobileBackgroundCanvas = document.getElementById('quantum-noise-fluid-canvas');
-        const drawingContext2D = mobileBackgroundCanvas.getContext('2d', { alpha: true });
-        let targetCanvasWidth = window.innerWidth, targetCanvasHeight = window.innerHeight;
-
-        function resizeCanvasToMobileScreen() {
-            targetCanvasWidth = window.innerWidth; targetCanvasHeight = window.innerHeight;
-            mobileBackgroundCanvas.width = targetCanvasWidth; mobileBackgroundCanvas.height = targetCanvasHeight;
-        }
-        window.addEventListener('resize', resizeCanvasToMobileScreen, { passive: true });
-        resizeCanvasToMobileScreen();
-
-        let canvasPointCluster = [];
-        for (let idx = 0; idx < 20; idx++) {
-            canvasPointCluster.push({
-                x: Math.random() * targetCanvasWidth, y: Math.random() * targetCanvasHeight,
-                r: Math.random() * 0.8 + 0.4, vx: (Math.random() - 0.5) * 0.1, vy: (Math.random() - 0.5) * 0.1, phase: Math.random() * Math.PI
-            });
-        }
-
-        let runTemporalTime = 0;
-        function renderMobileFluidCanvas() {
-            runTemporalTime += 0.001;
-            drawingContext2D.clearRect(0, 0, targetCanvasWidth, targetCanvasHeight);
-            drawingContext2D.fillStyle = "rgba(20, 86, 255, 0.15)";
-            for (let i = 0; i < canvasPointCluster.length; i++) {
-                let nodePoint = canvasPointCluster[i];
-                nodePoint.x += nodePoint.vx + Math.sin(runTemporalTime + nodePoint.phase) * 0.02;
-                nodePoint.y += nodePoint.vy + Math.cos(runTemporalTime + nodePoint.phase) * 0.02;
-                if (nodePoint.x < 0) nodePoint.x = targetCanvasWidth; if (nodePoint.x > targetCanvasWidth) nodePoint.x = 0;
-                if (nodePoint.y < 0) nodePoint.y = targetCanvasHeight; if (nodePoint.y > targetCanvasHeight) nodePoint.y = 0;
-                drawingContext2D.beginPath(); drawingContext2D.arc(nodePoint.x, nodePoint.y, nodePoint.r, 0, Math.PI * 2); drawingContext2D.fill();
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1; if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+                if (mouse.x != null && mouse.y != null) {
+                    let dx = mouse.x - this.x, dy = mouse.y - this.y, dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) {
+                        let force = (mouse.radius - dist) / mouse.radius;
+                        this.x -= (dx / dist) * force * 3; this.y -= (dy / dist) * force * 3;
+                    }
+                }
             }
-            requestAnimationFrame(renderMobileFluidCanvas);
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0, 242, 255, 0.4)'; ctx.fill(); }
         }
-        requestAnimationFrame(renderMobileFluidCanvas);
-
-        const classificationDockTriggers = document.querySelectorAll('.filter-node-trigger');
-        classificationDockTriggers.forEach(filterAnchorNode => {
-            filterAnchorNode.addEventListener('click', () => {
-                triggerSystemHapticFeedback(8);
-                document.querySelector('.filter-node-trigger.active-matrix-node').classList.remove('active-matrix-node');
-                filterAnchorNode.classList.add('active-matrix-node');
-                const chosenCategoryFilter = filterAnchorNode.getAttribute('data-filter-category');
-                
-                targetBentoCardsArray.forEach(cardComponentNode => {
-                    const blockCategoryType = cardComponentNode.getAttribute('data-category');
-                    const subsequentAttachmentRow = cardComponentNode.nextElementSibling;
-                    const condition = chosenCategoryFilter === 'all' || blockCategoryType === chosenCategoryFilter;
-                    
-                    cardComponentNode.classList.toggle('state-hidden-node', !condition);
-                    if(subsequentAttachmentRow && subsequentAttachmentRow.hasAttribute('data-category')) {
-                        subsequentAttachmentRow.classList.toggle('state-hidden-node', !condition);
+        function initNodes() { nodes = []; let count = (canvas.width * canvas.height) / 7500; for(let i = 0; i < count; i++) nodes.push(new Node()); }
+        initNodes();
+        function connectNodes() {
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    let dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y, dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        let opacity = (1 - (dist / 120)) * 0.12;
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${opacity})`; ctx.lineWidth = 1;
+                        ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke();
                     }
+                }
+            }
+        }
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); nodes.forEach(node => { node.update(); node.draw(); }); connectNodes(); requestAnimationFrame(animate); }
+        animate();
+
+        // Sayfa Etkileşimleri
+        document.addEventListener("DOMContentLoaded", () => {
+            const loader = document.getElementById('loader'), terminal = document.getElementById('terminal');
+            const centerLogo = document.getElementById('center-logo'), mainContent = document.getElementById('main-content'), promptTxt = document.getElementById('prompt-txt');
+            let executed = false;
+
+            loader.addEventListener('click', () => {
+                if (executed) return; executed = true;
+                initAudio(); promptTxt.style.display = 'none';
+
+                let tickCount = 0;
+                let tickInterval = setInterval(() => {
+                    if (tickCount < 8) { playDataTick(0.05, 600 + (tickCount * 100)); tickCount++; } else { clearInterval(tickInterval); }
+                }, 200);
+
+                setTimeout(() => {
+                    terminal.style.display = 'none'; centerLogo.style.display = 'block';
+                    playLogoExplosion();
+                    setTimeout(() => { centerLogo.style.opacity = '1'; centerLogo.style.transform = 'scale(1)'; centerLogo.style.transition = 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'; }, 50);
+                }, 1600);
+
+                setTimeout(() => {
+                    loader.style.opacity = '0'; loader.style.transition = 'opacity 0.6s ease'; mainContent.style.display = 'block';
+                    setTimeout(() => { loader.style.display = 'none'; mainContent.style.opacity = '1'; }, 600);
+                }, 3800);
+            });
+
+            // Kart Hover Oynatma Kontrolleri
+            document.querySelectorAll('.card').forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    playHoverSound();
+                    const vid = card.querySelector('video'); if(vid) vid.play().catch(o => {});
                 });
+               card.addEventListener('mouseleave', () => {
+    const vid = card.querySelector('video');
+
+    if(vid && vid.id !== 'main-video'){
+        vid.pause();
+        vid.currentTime = 0;
+    }
+});
+            });
+
+            // Modallar Yönetimi
+            const openAbout = document.getElementById('open-about'), closeAbout = document.getElementById('close-about'), aboutModal = document.getElementById('about-modal');
+            const openSocial = document.getElementById('open-social'), closeSocial = document.getElementById('close-social'), socialModal = document.getElementById('social-modal');
+            const alphaCard = document.getElementById('alpha-card');
+
+            if(openAbout) openAbout.addEventListener('click', () => { playInterfaceOpen(); aboutModal.classList.add('active'); });
+            if(closeAbout) closeAbout.addEventListener('click', () => { playCloseSound(); aboutModal.classList.remove('active'); });
+            if(openSocial) openSocial.addEventListener('click', () => { playInterfaceOpen(); socialModal.classList.add('active'); });
+            if(closeSocial) closeSocial.addEventListener('click', () => { playCloseSound(); socialModal.classList.remove('active'); });
+
+          const mainVideo = document.getElementById('main-video');
+
+if(mainVideo){
+
+    mainVideo.addEventListener('click', () => {
+
+        if(mainVideo.paused){
+            mainVideo.play();
+        }else{
+            mainVideo.pause();
+        }
+
+    });
+
+    mainVideo.addEventListener('dblclick', () => {
+
+        if(document.fullscreenElement){
+            document.exitFullscreen();
+        }else{
+            mainVideo.requestFullscreen();
+        }
+
+    });
+
+}
+window.addEventListener('load', () => {
+
+    const mainVideo = document.getElementById('main-video');
+
+    if(mainVideo){
+        mainVideo.pause();
+        mainVideo.currentTime = 0;
+    }
+
+});
+
+            window.addEventListener('click', (e) => {
+                if(e.target === aboutModal) { playCloseSound(); aboutModal.classList.remove('active'); }
+                if(e.target === socialModal) { playCloseSound(); socialModal.classList.remove('active'); }
             });
         });
-
-        const quantitativeCounterCells = document.querySelectorAll('[data-target-metric-limit]');
-        const numericalSequenceObserverEngine = new IntersectionObserver((observedEntries, numericalObserverInstance) => {
-            observedEntries.forEach(countedEntry => {
-                if (!countedEntry.isIntersecting) return;
-                const targetedNumericalDOMNode = countedEntry.target;
-                const finalMetricTargetValue = parseInt(targetedNumericalDOMNode.getAttribute('data-target-metric-limit'), 10);
-                let proceduralStartValue = 0;
-
-                const sequenceIntervalClock = setInterval(() => {
-                    proceduralStartValue += Math.ceil(finalMetricTargetValue / 40);
-                    if (proceduralStartValue >= finalMetricTargetValue) {
-                        proceduralStartValue = finalMetricTargetValue;
-                        clearInterval(sequenceIntervalClock);
-                    }
-                    requestAnimationFrame(() => { targetedNumericalDOMNode.innerText = proceduralStartValue.toLocaleString(); });
-                }, 25);
-                numericalObserverInstance.unobserve(targetedNumericalDOMNode);
-            });
-        }, { root: null, threshold: 0.1 });
-        quantitativeCounterCells.forEach(counterCell => numericalSequenceObserverEngine.observe(counterCell));
     </script>
 </body>
-</html> BURDA İNDEX MENU BUTTONU GECIYOR DEMI
+</html>
